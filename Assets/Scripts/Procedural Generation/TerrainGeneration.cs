@@ -10,6 +10,9 @@ namespace EcosystemSimulation
         [SerializeField]
         private TerrainType[] terrainTypes;
 
+        //private GameObject[] instantiatedObjects;
+        private GameObject instantiatedObjects;
+
         [SerializeField]
         private float noiseScale;
         [SerializeField]
@@ -25,26 +28,25 @@ namespace EcosystemSimulation
         private int length;
 
         [SerializeField]
-        private int mapSeed;
+        public int mapSeed { get; set; }
 
-        [SerializeField]
-        private GameObject blockPrefab;
+        public MeshFilter meshFilter;
+        public MeshRenderer meshRenderer;
+        TextureGenerator textureGenerator = new TextureGenerator();
+        Texture2D mapTexture;
 
         public void GenerateTerrain()
         {
+            //instantiatedObjects = new GameObject[width * length];
+            //instantiatedObjects = new GameObject();
+
+
             Noise noiseGenerator = new Noise();
             float[,] noiseMap = noiseGenerator.GenerateNoiseMap(mapSeed, width, length, noiseScale, octaves, persistence, lacunarity, Vector2.zero);
             TerrainName[,] terrainMap = GenerateTerrainMap(noiseMap);
 
-            for (int y = 0; y < length; y++)
-            {
-                for(int x = 0; x < width; x++)
-                {
-                    GameObject block = Instantiate(blockPrefab, new Vector3(x, 0, y), Quaternion.identity);
-                    Color currentColor = terrainTypes[(int)terrainMap[x, y]].colour;
-                    ChangeColor(block, currentColor);
-                }
-            }
+            mapTexture = GenerateTexture(width, length, noiseMap);
+            DrawMesh(MeshGenerator.GenerateMesh(width, length, noiseMap), mapTexture);
         }
 
         public TerrainName[,] GenerateTerrainMap(float[,] noiseMap)
@@ -66,6 +68,38 @@ namespace EcosystemSimulation
                 }
             }
             return terrainMap;
+        }
+
+        public void ClearPreviousGeneration()
+        {
+            Destroy(instantiatedObjects);
+        }
+
+        public Texture2D GenerateTexture(int width, int height, float[,] noiseMap)
+        {
+            Color[] colourMap = new Color[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float currentNoiseValue = noiseMap[x, y];
+                    for (int i = 0; i < terrainTypes.Length; i++)
+                    {
+                        if (currentNoiseValue <= terrainTypes[i].height)
+                        {
+                            colourMap[y * width + x] = terrainTypes[i].colour;
+                            break;
+                        }
+                    }
+                }
+            }
+            return textureGenerator.TextureFromColourMap(colourMap, width, height);
+        }
+
+        public void DrawMesh(MeshData meshData, Texture2D texture)
+        {
+            meshFilter.sharedMesh = meshData.CreateMesh();
+            meshRenderer.sharedMaterial.mainTexture = texture;
         }
 
         public void ChangeColor(GameObject gameObject, Color color)
