@@ -7,6 +7,8 @@ namespace EcosystemSimulation
 {
     public class TerrainGeneration : MonoBehaviour
     {
+        public FloraGenerator floraGenerator;
+
         [SerializeField]
         private TerrainType[] terrainTypes;
 
@@ -21,6 +23,11 @@ namespace EcosystemSimulation
         private float persistence;
         [SerializeField]
         private float lacunarity;
+
+        [SerializeField]
+        private int treeDensity;
+        [SerializeField]
+        private int plantDensity;
 
         [SerializeField]
         private int width;
@@ -47,6 +54,10 @@ namespace EcosystemSimulation
 
             mapTexture = GenerateTexture(width, length, noiseMap);
             DrawMesh(MeshGenerator.GenerateMesh(width, length, noiseMap), mapTexture);
+
+            floraGenerator.Init(mapSeed, width, length, terrainMap);
+            floraGenerator.GenerateTrees();
+            floraGenerator.GeneratePlants();
         }
 
         public TerrainName[,] GenerateTerrainMap(float[,] noiseMap)
@@ -73,6 +84,7 @@ namespace EcosystemSimulation
         public void ClearPreviousGeneration()
         {
             Destroy(instantiatedObjects);
+            floraGenerator.ClearGeneratedFlora();
         }
 
         public Texture2D GenerateTexture(int width, int height, float[,] noiseMap)

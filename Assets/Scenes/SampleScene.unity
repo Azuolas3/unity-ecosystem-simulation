@@ -713,8 +713,8 @@ MonoBehaviour:
   octaves: 2
   persistence: 0.5
   lacunarity: 1
-  width: 60
-  length: 60
+  width: 40
+  length: 40
   meshFilter: {fileID: 1302744926}
   meshRenderer: {fileID: 1302744925}
 --- !u!114 &676832268

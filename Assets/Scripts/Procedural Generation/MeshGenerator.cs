@@ -8,22 +8,23 @@ namespace EcosystemSimulation
     {
         public static MeshData GenerateMesh(int width, int length, float[,] noiseMap)
         {
+            //width++;
+            //length++;
+
             MeshData meshData = new MeshData(width, length);
-            float topLeftX = (width - 1) / -2f;
-            float topLeftZ = (width - 1) / 2f;
             int vertexIndex = 0;
 
             for(int z = 0; z < length; z++)
             {
                 for(int x = 0; x < width; x++)
                 {
-                    meshData.vertices[vertexIndex] = new Vector3(topLeftX + x, 0, topLeftZ - z);
+                    meshData.vertices[vertexIndex] = new Vector3(x, 0, z);
                     meshData.uv[vertexIndex] = new Vector2(x / (float)width, z / (float)length);
 
                     if (x < width - 1 && z < length - 1)
                     {
-                        meshData.AddTriangle(vertexIndex, vertexIndex + width + 1, vertexIndex + width);
-                        meshData.AddTriangle(vertexIndex+width+1, vertexIndex, vertexIndex + 1);
+                        meshData.AddTriangle(vertexIndex, vertexIndex + width, vertexIndex + width + 1);
+                        meshData.AddTriangle(vertexIndex, vertexIndex + width + 1, vertexIndex + 1);
                     }
                     vertexIndex++;
                 }
