@@ -8,12 +8,14 @@ namespace EcosystemSimulation
     public class TerrainGeneration : MonoBehaviour
     {
         public FloraGenerator floraGenerator;
+        public FaunaGenerator faunaGenerator;
 
         [SerializeField]
         private TerrainType[] terrainTypes;
 
         //private GameObject[] instantiatedObjects;
         private GameObject instantiatedObjects;
+        private bool[,] occupiedTilesMap;
 
         [SerializeField]
         private float noiseScale;
@@ -55,9 +57,15 @@ namespace EcosystemSimulation
             mapTexture = GenerateTexture(width, length, noiseMap);
             DrawMesh(MeshGenerator.GenerateMesh(width, length, noiseMap), mapTexture);
 
-            floraGenerator.Init(mapSeed, width, length, terrainMap);
+            occupiedTilesMap = new bool[width, length];
+
+            floraGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
             floraGenerator.GenerateTrees();
             floraGenerator.GeneratePlants();
+
+            faunaGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
+            faunaGenerator.GeneratePreyFauna();
+            faunaGenerator.GeneratePredatorFauna();
         }
 
         public TerrainName[,] GenerateTerrainMap(float[,] noiseMap)
@@ -85,6 +93,7 @@ namespace EcosystemSimulation
         {
             Destroy(instantiatedObjects);
             floraGenerator.ClearGeneratedFlora();
+            faunaGenerator.ClearGeneratedFauna();
         }
 
         public Texture2D GenerateTexture(int width, int height, float[,] noiseMap)

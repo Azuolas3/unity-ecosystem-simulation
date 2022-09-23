@@ -4,43 +4,43 @@ using UnityEngine;
 
 namespace EcosystemSimulation
 {
-    public class FloraGenerator : MonoBehaviour
+    public class FaunaGenerator : MonoBehaviour
     {
         [SerializeField]
-        GameObject[] treePrefabs;
+        GameObject[] predatorPrefabs;
         [SerializeField]
-        GameObject[] plantPrefabs;
+        GameObject[] preyPrefabs;
 
         [SerializeField]
-        private float treeDensity;
+        private float predatorDensity;
         [SerializeField]
-        private float plantDensity;
+        private float preyDensity;
 
         TerrainName[,] terrainMap;
         private int seed;
         private int width;
         private int length;
 
-        private GameObject instantiatedFlora;
+        private GameObject instantiatedFauna;
         private bool[,] occupiedTilesMap;
 
-        public void GenerateTrees()
+        public void GeneratePreyFauna()
         {
-            instantiatedFlora = new GameObject();
+            instantiatedFauna = new GameObject();
             System.Random pseudoRNG = new System.Random(seed);
 
             for (int y = 0; y < length - 1; y++)
             {
                 for (int x = 0; x < width - 1; x++)
                 {
-                    if(terrainMap[x, y] == TerrainName.Grass && !occupiedTilesMap[x, y])
+                    if ((terrainMap[x, y] == TerrainName.Grass || terrainMap[x, y] == TerrainName.ShallowGrass) && !occupiedTilesMap[x, y])
                     {
                         float chance = pseudoRNG.Next(0, 100);
-                        if(chance <= treeDensity)
+                        if (chance <= preyDensity)
                         {
-                            int chosenTreeIndex = pseudoRNG.Next(0, treePrefabs.Length);
-                            GameObject obj = Instantiate(treePrefabs[chosenTreeIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
-                            obj.transform.SetParent(instantiatedFlora.transform);
+                            int chosenAnimalIndex = pseudoRNG.Next(0, preyPrefabs.Length);
+                            GameObject obj = Instantiate(preyPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
+                            obj.transform.SetParent(instantiatedFauna.transform);
 
                             occupiedTilesMap[x, y] = true;
                         }
@@ -49,7 +49,7 @@ namespace EcosystemSimulation
             }
         }
 
-        public void GeneratePlants()
+        public void GeneratePredatorFauna()
         {
             System.Random pseudoRNG = new System.Random(seed);
 
@@ -60,20 +60,22 @@ namespace EcosystemSimulation
                     if ((terrainMap[x, y] == TerrainName.Grass || terrainMap[x, y] == TerrainName.ShallowGrass) && !occupiedTilesMap[x, y])
                     {
                         float chance = pseudoRNG.Next(0, 100);
-                        if (chance <= plantDensity)
+                        if (chance <= predatorDensity)
                         {
-                            int chosenPlantIndex = pseudoRNG.Next(0, plantPrefabs.Length);
-                            GameObject obj = Instantiate(plantPrefabs[chosenPlantIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
-                            obj.transform.SetParent(instantiatedFlora.transform);
+                            int chosenAnimalIndex = pseudoRNG.Next(0, predatorPrefabs.Length);
+                            GameObject obj = Instantiate(predatorPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
+                            obj.transform.SetParent(instantiatedFauna.transform);
+
+                            occupiedTilesMap[x, y] = true;
                         }
                     }
                 }
             }
         }
 
-        public void ClearGeneratedFlora()
+        public void ClearGeneratedFauna()
         {
-            Destroy(instantiatedFlora);
+            Destroy(instantiatedFauna);
         }
 
         public void Init(int seed, int width, int length, TerrainName[,] terrainMap, bool[,] occupiedTilesMap)
@@ -85,5 +87,6 @@ namespace EcosystemSimulation
             this.occupiedTilesMap = occupiedTilesMap;
         }
     }
+
 }
 

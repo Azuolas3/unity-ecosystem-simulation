@@ -4,9 +4,20 @@ using UnityEngine;
 
 namespace EcosystemSimulation
 {
-    public class Animal : MonoBehaviour
+    public abstract class Animal : MonoBehaviour
     {
-        
+        private GameObject animalObject;
+
+        private float hunger;
+        private float thirst;
+
+        private float speed;
+
+        public void Move(Vector3 destination)
+        {
+            float step = speed * Time.deltaTime;
+            animalObject.transform.position = Vector3.MoveTowards(animalObject.transform.position, destination, step);
+        }
     }
 }
 
