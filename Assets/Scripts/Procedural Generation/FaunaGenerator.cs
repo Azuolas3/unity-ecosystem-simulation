@@ -41,8 +41,10 @@ namespace EcosystemSimulation
                             int chosenAnimalIndex = pseudoRNG.Next(0, preyPrefabs.Length);
                             GameObject obj = Instantiate(preyPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
                             obj.transform.SetParent(instantiatedFauna.transform);
+                            obj.GetComponent<Animal>().Init(obj, 50, 50, 1);
 
                             occupiedTilesMap[x, y] = true;
+                            return;
                         }
                     }
                 }
@@ -65,6 +67,7 @@ namespace EcosystemSimulation
                             int chosenAnimalIndex = pseudoRNG.Next(0, predatorPrefabs.Length);
                             GameObject obj = Instantiate(predatorPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
                             obj.transform.SetParent(instantiatedFauna.transform);
+                            obj.GetComponent<Animal>().Init(obj, 50, 50, 1);
 
                             occupiedTilesMap[x, y] = true;
                         }

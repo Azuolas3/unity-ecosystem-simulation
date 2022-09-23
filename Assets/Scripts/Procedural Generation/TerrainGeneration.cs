@@ -65,7 +65,7 @@ namespace EcosystemSimulation
 
             faunaGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
             faunaGenerator.GeneratePreyFauna();
-            faunaGenerator.GeneratePredatorFauna();
+            //faunaGenerator.GeneratePredatorFauna();
         }
 
         public TerrainName[,] GenerateTerrainMap(float[,] noiseMap)

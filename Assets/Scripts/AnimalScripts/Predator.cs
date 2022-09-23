@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Predator : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+namespace EcosystemSimulation
+{
+    public class Predator : Animal
     {
-        
+        public override void Move(Vector3 destination)
+        {
+            float step = speed * Time.deltaTime;
+            animalObject.transform.position = Vector3.MoveTowards(animalObject.transform.position, destination, step);
+        }
     }
 }

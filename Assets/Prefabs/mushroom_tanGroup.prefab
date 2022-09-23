@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 4183046142302244234}
   - component: {fileID: 982613582911980079}
   - component: {fileID: 3046129418119526117}
-  m_Layer: 0
+  - component: {fileID: 8513473887321263651}
+  m_Layer: 6
   m_Name: mushroom_tanGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8513473887321263651
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3550801201111897904}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.269631, y: 0.250488, z: 0.254197}
+  m_Center: {x: 0.001513496, y: 0.125244, z: -0.015084501}
