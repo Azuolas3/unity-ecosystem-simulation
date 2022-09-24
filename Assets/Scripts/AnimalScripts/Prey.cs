@@ -4,17 +4,27 @@ using UnityEngine;
 
 namespace EcosystemSimulation
 {
-    public class Prey : Animal
+    public class Prey : Animal, IEatable
     {
+        private int nutritionalValue;
+        public int NutritionalValue { get { return nutritionalValue; } }
+
         protected override void Move(Vector3 destination)
         {
-            float step = speed * Time.deltaTime;
+            float step = movementSpeed * Time.deltaTime;
             animalObject.transform.position = Vector3.MoveTowards(animalObject.transform.position, destination, step);
 
-            //if(Vector3.Distance(animalObject.transform.position, destination) > 0.1f)
-            //{
-            //    Move(destination);
-            //}
+
+        }
+
+        protected override void RotateTowards(Vector3 destination)
+        {
+            Vector3 targetDirection = destination - animalObject.transform.position;
+            float step = rotationSpeed * Time.deltaTime;
+
+            Vector3 direction = Vector3.RotateTowards(animalObject.transform.forward, targetDirection, step, 0f); 
+
+            animalObject.transform.rotation = Quaternion.LookRotation(direction);
         }
 
         protected override Priority GetPriority()
@@ -60,6 +70,50 @@ namespace EcosystemSimulation
                     return gameObject.transform.position;
                     
             }
+        }
+
+        protected override Action GetNextAction()
+        {
+            switch (currentPriority)
+            {
+                case Priority.FindFood:
+                    if (PlantColliders.Length != 0)
+                    {
+                        Collider collider = FindNearestCollider(PlantColliders);
+                        Vector3 destination =  collider.gameObject.transform.position;
+                        return new EatingAction(this, collider.GetComponent<IEatable>(), destination);
+                    }
+                    else
+                    {
+                        return new EatingAction(this, null, new Vector3(25, 0, 25));
+                    }
+                default:
+                    return new EatingAction(this, null, new Vector3(25, 0, 25));
+
+            }
+        }
+
+        public void Eat()
+        {
+            Destroy(gameObject);
+        }
+
+        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, int baseNutritionalValue)
+        {
+            this.animalObject = animalObject;
+            fov = new FieldOfView();
+
+            hunger = baseHunger;
+            thirst = baseThirst;
+            movementSpeed = baseSpeed;
+            lineOfSightRadius = baseSightRadius;
+            currentDestination = animalObject.transform.position;
+            nutritionalValue = baseNutritionalValue;
+            //Collider[] colliders = fov.GetNearbyColliders(animalObject.transform.position, 3);
+            //foreach(Collider collider in colliders)
+            //{
+            //    Debug.Log(collider.gameObject);
+            //}
         }
     }
 }

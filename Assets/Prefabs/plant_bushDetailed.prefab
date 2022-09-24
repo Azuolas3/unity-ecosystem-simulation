@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5133507936738577481}
   - component: {fileID: 6978632243013187715}
   - component: {fileID: 2883619481477811111}
+  - component: {fileID: 5482636698661472463}
   m_Layer: 6
   m_Name: plant_bushDetailed
   m_TagString: Untagged
@@ -97,3 +98,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.602544, y: 0.360411, z: 0.602544}
   m_Center: {x: 0, y: 0.1802055, z: 0}
+--- !u!114 &5482636698661472463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8924420858622826838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f1159a8ddebed47a9154c4bba71186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

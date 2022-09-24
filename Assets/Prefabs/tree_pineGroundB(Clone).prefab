@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 6785951112717858099}
   - component: {fileID: 5974993409223332320}
   - component: {fileID: 8524402421794127425}
-  m_Layer: 0
+  - component: {fileID: -2936634560966985378}
+  m_Layer: 9
   m_Name: tree_pineGroundB(Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,3 +98,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.480384, y: 1.041967, z: 0.5547}
   m_Center: {x: 0, y: 0.5209835, z: 0}
+--- !u!208 &-2936634560966985378
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572319761958783155}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.24000001, y: 0.521, z: 0.277}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.521, z: 0}
+  m_TimeToStationary: 0.5

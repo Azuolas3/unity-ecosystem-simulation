@@ -65,6 +65,7 @@ namespace EcosystemSimulation
                             int chosenPlantIndex = pseudoRNG.Next(0, plantPrefabs.Length);
                             GameObject obj = Instantiate(plantPrefabs[chosenPlantIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
                             obj.transform.SetParent(instantiatedFlora.transform);
+                            obj.GetComponent<Plant>().Init(1);
                         }
                     }
                 }

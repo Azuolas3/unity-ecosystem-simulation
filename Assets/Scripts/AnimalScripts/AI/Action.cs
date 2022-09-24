@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Action : MonoBehaviour
+namespace EcosystemSimulation
 {
-    // Start is called before the first frame update
-    void Start()
+    public abstract class Action
     {
-        
+        protected Animal performer; //object which performs the action
+        public Vector3 actionDestination;
+
+        public abstract void Execute();
+        public abstract void OnComplete();
+        public abstract bool IsInRange();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
+

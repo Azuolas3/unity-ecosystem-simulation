@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.AI.Navigation;
 using EcosystemSimulation;
 
 namespace EcosystemSimulation
@@ -12,6 +13,8 @@ namespace EcosystemSimulation
 
         [SerializeField]
         private TerrainType[] terrainTypes;
+
+
 
         //private GameObject[] instantiatedObjects;
         private GameObject instantiatedObjects;
@@ -39,6 +42,8 @@ namespace EcosystemSimulation
         [SerializeField]
         public int mapSeed { get; set; }
 
+        public NavMeshSurface navMeshSurface;
+
         public MeshFilter meshFilter;
         public MeshRenderer meshRenderer;
         TextureGenerator textureGenerator = new TextureGenerator();
@@ -65,6 +70,7 @@ namespace EcosystemSimulation
 
             faunaGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
             faunaGenerator.GeneratePreyFauna();
+            navMeshSurface.BuildNavMesh();
             //faunaGenerator.GeneratePredatorFauna();
         }
 

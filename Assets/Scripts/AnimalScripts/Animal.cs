@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace EcosystemSimulation
 {
@@ -14,22 +15,36 @@ namespace EcosystemSimulation
             RunAway
         }
 
+
+        [SerializeField]
+        protected Priority currentPriority;
         protected Vector3 currentDestination;
+        public Action currentAction;
 
         protected GameObject animalObject;
         protected FieldOfView fov;
 
-        protected Priority currentPriority;
-
+        [SerializeField]
         protected float hunger;
         protected float thirst;
 
+        public float Hunger 
+        {
+            get { return hunger; }
+            set { hunger = value; }
+        }
+
         protected float reproductionUrge;
 
-        protected float speed;
+        protected float movementSpeed;
+        protected float rotationSpeed = 10f;
         protected float lineOfSightRadius;
 
         protected bool NeedsDestination { get { return animalObject.transform.position == currentDestination; } }
+        protected bool NeedsAction { get { return currentAction == null; } }
+
+        [SerializeField]
+        private NavMeshAgent navAgent;
 
         protected Collider[] PredatorColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask); } }
         protected Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PlantLayerMask); } }
@@ -43,9 +58,18 @@ namespace EcosystemSimulation
 
             currentPriority = GetPriority();
             //Debug.Log(currentPriority);
-            //GetNextDestination();
-            Move(GetNextDestination());
-
+            if(NeedsAction)
+            {
+                currentAction = GetNextAction();
+                currentDestination = currentAction.actionDestination;
+            }
+            navAgent.SetDestination(currentDestination);
+            //Move(currentDestination);
+            //RotateTowards(currentDestination);
+            if (currentAction.IsInRange())
+            {
+                currentAction.Execute();
+            }
         }
 
         public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius)
@@ -55,8 +79,9 @@ namespace EcosystemSimulation
 
             hunger = baseHunger;
             thirst = baseThirst;
-            speed = baseSpeed;
+            movementSpeed = baseSpeed;
             lineOfSightRadius = baseSightRadius;
+            currentDestination = animalObject.transform.position;
             //Collider[] colliders = fov.GetNearbyColliders(animalObject.transform.position, 3);
             //foreach(Collider collider in colliders)
             //{
@@ -84,8 +109,10 @@ namespace EcosystemSimulation
         }
 
         protected abstract void Move(Vector3 destination);
+        protected abstract void RotateTowards(Vector3 destination);
         protected abstract Priority GetPriority();
         protected abstract Vector3 GetNextDestination();
+        protected abstract Action GetNextAction();
     }
 }
 
