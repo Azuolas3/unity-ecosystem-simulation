@@ -6,12 +6,13 @@ namespace EcosystemSimulation
 {
     public abstract class Action
     {
-        protected Animal performer; //object which performs the action
+        public Animal performer; //object which performs the action
         public Vector3 actionDestination;
 
         public abstract void Execute();
         public abstract void OnComplete();
-        public abstract bool IsInRange();
+        public abstract void Cancel();
+        public abstract bool AreConditionsMet();
     }
 
 }

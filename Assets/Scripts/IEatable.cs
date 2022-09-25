@@ -10,5 +10,6 @@ namespace EcosystemSimulation
         void Eat();
 
         int NutritionalValue { get; }
+        List<Animal> Eaters { get; set; }
     }
 }

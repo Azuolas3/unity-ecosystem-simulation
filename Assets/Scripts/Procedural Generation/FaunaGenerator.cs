@@ -16,6 +16,8 @@ namespace EcosystemSimulation
         [SerializeField]
         private float preyDensity;
 
+        private int preyCount = 0;
+
         TerrainName[,] terrainMap;
         private int seed;
         private int width;
@@ -42,9 +44,12 @@ namespace EcosystemSimulation
                             GameObject obj = Instantiate(preyPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
                             obj.transform.SetParent(instantiatedFauna.transform);
                             obj.GetComponent<Prey>().Init(obj, 50, 50, 1, 3, 50);
+                            obj.name = "Rabbit" + preyCount;
 
                             occupiedTilesMap[x, y] = true;
-                            return;
+                            preyCount++;
+                            //if(preyCount == 5)
+                                //return;
                         }
                     }
                 }

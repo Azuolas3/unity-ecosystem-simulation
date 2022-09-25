@@ -15,18 +15,19 @@ namespace EcosystemSimulation
             RunAway
         }
 
-
         [SerializeField]
         protected Priority currentPriority;
-        protected Vector3 currentDestination;
+        [SerializeField]
+        public Vector3 currentDestination;
         public Action currentAction;
 
-        protected GameObject animalObject;
+        public GameObject animalObject;
         protected FieldOfView fov;
 
         [SerializeField]
         protected float hunger;
         protected float thirst;
+        protected float reproductionUrge;
 
         public float Hunger 
         {
@@ -34,11 +35,18 @@ namespace EcosystemSimulation
             set { hunger = value; }
         }
 
-        protected float reproductionUrge;
+        protected float ReproductionUrge
+        {
+            get { return Hunger; }
+            set { reproductionUrge = (hunger + thirst) / 2; }
+        }
 
         protected float movementSpeed;
         protected float rotationSpeed = 10f;
         protected float lineOfSightRadius;
+
+        [SerializeField]
+        private bool test;
 
         protected bool NeedsDestination { get { return animalObject.transform.position == currentDestination; } }
         protected bool NeedsAction { get { return currentAction == null; } }
@@ -50,23 +58,23 @@ namespace EcosystemSimulation
         protected Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PlantLayerMask); } }
         protected Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PreyLayerMask); } }
 
+        int frameCount = 0;
+
         public void Update()
         {
-            //Collider[] plantColliders = fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PlantLayerMask);
-            //Collider[] predatorColliders = fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask);
-            //Collider[] preyColliders = fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PreyLayerMask);
-
+            frameCount++;
             currentPriority = GetPriority();
             //Debug.Log(currentPriority);
-            if(NeedsAction)
+            test = NeedsAction;
+            if (NeedsAction)
             {
+                //Debug.Log("Needs destination  " + animalObject.name + " " + frameCount);
                 currentAction = GetNextAction();
                 currentDestination = currentAction.actionDestination;
             }
             navAgent.SetDestination(currentDestination);
-            //Move(currentDestination);
-            //RotateTowards(currentDestination);
-            if (currentAction.IsInRange())
+
+            if (currentAction.AreConditionsMet())
             {
                 currentAction.Execute();
             }

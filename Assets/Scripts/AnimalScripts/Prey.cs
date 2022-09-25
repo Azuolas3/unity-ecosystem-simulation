@@ -6,6 +6,14 @@ namespace EcosystemSimulation
 {
     public class Prey : Animal, IEatable
     {
+        private List<Animal> eaters;
+
+        public List<Animal> Eaters 
+        { 
+            get { return eaters; } 
+            set { eaters = value; }
+        }
+
         private int nutritionalValue;
         public int NutritionalValue { get { return nutritionalValue; } }
 
@@ -85,10 +93,10 @@ namespace EcosystemSimulation
                     }
                     else
                     {
-                        return new EatingAction(this, null, new Vector3(25, 0, 25));
+                        return new SearchAction(this, () => PlantColliders, new Vector3(25, 0, 25));
                     }
                 default:
-                    return new EatingAction(this, null, new Vector3(25, 0, 25));
+                    return new SearchAction(this, () => PlantColliders, new Vector3(25, 0, 25)); ;
 
             }
         }
@@ -100,6 +108,7 @@ namespace EcosystemSimulation
 
         public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, int baseNutritionalValue)
         {
+            eaters = new List<Animal>();
             this.animalObject = animalObject;
             fov = new FieldOfView();
 
