@@ -24,6 +24,8 @@ namespace EcosystemSimulation
 
         public override void OnComplete()
         {
+            //Collider collider = performer.FindNearestCollider(getColliders());
+            //performer.currentAction = new EatingAction(performer, GetComponent<>);
             performer.currentAction = null;
         }
 

@@ -68,8 +68,9 @@ namespace EcosystemSimulation
             test = NeedsAction;
             if (NeedsAction)
             {
-                //Debug.Log("Needs destination  " + animalObject.name + " " + frameCount);
+                //Debug.Log("Needs action  " + animalObject.name);
                 currentAction = GetNextAction();
+                Debug.Log("Needs action  " + animalObject.name + currentAction);
                 currentDestination = currentAction.actionDestination;
             }
             navAgent.SetDestination(currentDestination);
@@ -79,6 +80,16 @@ namespace EcosystemSimulation
                 currentAction.Execute();
             }
         }
+
+        //private void LateUpdate()
+        //{
+        //    if (NeedsAction)
+        //    {
+        //        Debug.Log("Needs action  " + animalObject.name);
+        //        currentAction = GetNextAction();
+        //        currentDestination = currentAction.actionDestination;
+        //    }
+        //}
 
         public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius)
         {
@@ -90,6 +101,8 @@ namespace EcosystemSimulation
             movementSpeed = baseSpeed;
             lineOfSightRadius = baseSightRadius;
             currentDestination = animalObject.transform.position;
+            currentPriority = GetPriority();
+            currentAction = GetNextAction();
             //Collider[] colliders = fov.GetNearbyColliders(animalObject.transform.position, 3);
             //foreach(Collider collider in colliders)
             //{
@@ -97,7 +110,7 @@ namespace EcosystemSimulation
             //}
         }
 
-        protected Collider FindNearestCollider(Collider[] colliders)
+        public Collider FindNearestCollider(Collider[] colliders)
         {
             Collider nearestCollider = colliders[0];
             float nearestDistance = float.MaxValue;

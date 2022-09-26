@@ -564,7 +564,7 @@ MonoBehaviour:
   preyPrefabs:
   - {fileID: 2545046031021082620, guid: 5b3c0912ccdff354db866651e4f68b5b, type: 3}
   predatorDensity: 1
-  preyDensity: 5
+  preyDensity: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

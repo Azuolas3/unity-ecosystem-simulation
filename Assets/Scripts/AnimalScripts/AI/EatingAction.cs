@@ -19,7 +19,7 @@ namespace EcosystemSimulation
 
         public override void Execute()
         {
-            Debug.Log(food + " " + food.NutritionalValue);
+            //Debug.Log(food + " " + food.NutritionalValue);
             performer.Hunger += food.NutritionalValue;
             if (performer.Hunger > 100)
                 performer.Hunger = 100;
@@ -33,8 +33,9 @@ namespace EcosystemSimulation
             //performer.currentAction = null;
             foreach(Animal animal in food.Eaters)
             {
-                if(animal.currentAction != null)
-                    animal.currentAction.Cancel();
+                //if(animal.currentAction != null) //have to check if its null cause there's a chance its the second time the animal's current action is being removed
+                animal.currentAction.Cancel();
+                //food.Eaters.Remove(animal);
             }
         }
 
@@ -45,8 +46,7 @@ namespace EcosystemSimulation
 
         public override bool AreConditionsMet()
         {
-            return (Vector3.Distance(performer.gameObject.transform.position, actionDestination) < 0.2f);
-
+            return (Vector3.Distance(performer.gameObject.transform.position, actionDestination) < 0.3f);
         }
     }
 }

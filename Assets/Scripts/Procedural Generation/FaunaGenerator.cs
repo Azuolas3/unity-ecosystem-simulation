@@ -37,7 +37,7 @@ namespace EcosystemSimulation
                 {
                     if ((terrainMap[x, y] == TerrainName.Grass || terrainMap[x, y] == TerrainName.ShallowGrass) && !occupiedTilesMap[x, y])
                     {
-                        float chance = pseudoRNG.Next(0, 100);
+                        float chance = pseudoRNG.Next(0, 1000);
                         if (chance <= preyDensity)
                         {
                             int chosenAnimalIndex = pseudoRNG.Next(0, preyPrefabs.Length);
@@ -84,6 +84,7 @@ namespace EcosystemSimulation
         public void ClearGeneratedFauna()
         {
             Destroy(instantiatedFauna);
+            preyCount = 0;
         }
 
         public void Init(int seed, int width, int length, TerrainName[,] terrainMap, bool[,] occupiedTilesMap)

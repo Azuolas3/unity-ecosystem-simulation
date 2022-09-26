@@ -88,6 +88,7 @@ namespace EcosystemSimulation
                     if (PlantColliders.Length != 0)
                     {
                         Collider collider = FindNearestCollider(PlantColliders);
+                        Debug.Log(collider + " " + animalObject.name);
                         Vector3 destination =  collider.gameObject.transform.position;
                         return new EatingAction(this, collider.GetComponent<IEatable>(), destination);
                     }

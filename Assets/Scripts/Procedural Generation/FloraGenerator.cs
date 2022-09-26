@@ -24,6 +24,8 @@ namespace EcosystemSimulation
         private GameObject instantiatedFlora;
         private bool[,] occupiedTilesMap;
 
+        private int floraCount;
+
         public void GenerateTrees()
         {
             instantiatedFlora = new GameObject();
@@ -66,6 +68,8 @@ namespace EcosystemSimulation
                             GameObject obj = Instantiate(plantPrefabs[chosenPlantIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
                             obj.transform.SetParent(instantiatedFlora.transform);
                             obj.GetComponent<Plant>().Init(1);
+                            obj.name = "Plant " + floraCount;
+                            floraCount++;
                         }
                     }
                 }

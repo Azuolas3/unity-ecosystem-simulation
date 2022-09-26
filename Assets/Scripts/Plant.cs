@@ -23,8 +23,8 @@ namespace EcosystemSimulation
         {
             //Eaters = new List<Animal>();
             //Debug.Log(gameObject);
-            if((UnityEngine.Object)this != null)
-                Destroy(gameObject);
+            Destroy(gameObject);
+            gameObject.GetComponent<Collider>().enabled = false; // disabling it manually after destroying since destroy is delayed until end of update(), which means another animal can queue action to eat it aswell.
         }
 
         public void Init(int nutritionalValue)
