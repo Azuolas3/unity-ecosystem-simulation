@@ -39,11 +39,16 @@ namespace EcosystemSimulation
         [SerializeField]
         private int length;
 
+
+        public static int MapLength { get; set; }
+
         [SerializeField]
         public int mapSeed { get; set; }
 
         public NavMeshSurface navMeshSurface;
 
+        [SerializeField]
+        private BoxCollider mapCollider;
         public MeshFilter meshFilter;
         public MeshRenderer meshRenderer;
         TextureGenerator textureGenerator = new TextureGenerator();
@@ -61,6 +66,8 @@ namespace EcosystemSimulation
 
             mapTexture = GenerateTexture(width, length, noiseMap);
             DrawMesh(MeshGenerator.GenerateMesh(width, length, noiseMap), mapTexture);
+
+            SetupCollider();
 
             occupiedTilesMap = new bool[width, length];
 
@@ -121,6 +128,12 @@ namespace EcosystemSimulation
                 }
             }
             return textureGenerator.TextureFromColourMap(colourMap, width, height);
+        }
+
+        private void SetupCollider()
+        {
+            mapCollider.size = new Vector3(width-1, 0, length-1);
+            mapCollider.center = new Vector3((float)(width-1)/2, 0, (float)(length-1)/2);
         }
 
         public void DrawMesh(MeshData meshData, Texture2D texture)

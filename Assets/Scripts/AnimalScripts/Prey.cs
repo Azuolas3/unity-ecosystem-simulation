@@ -35,7 +35,7 @@ namespace EcosystemSimulation
                     return Priority.FindFood;
                 if(thirst < 100 && thirst <= Hunger)
                     return Priority.FindWater;
-                if(ReproductionUrge > 70 && Hunger > 50 && thirst > 50)
+                if (ReproductionUrge > 70 && Hunger > 50 && thirst > 50)
                 {
                     Debug.Log("NORO YRA");
                     return Priority.Reproduce;
@@ -78,7 +78,8 @@ namespace EcosystemSimulation
                     }
                     else
                     {
-                        return new SearchAction(this, () => PlantColliders, new Vector3(25, 0, 25));
+
+                        return new SearchAction(this, () => PlantColliders, GetSearchDestination());
                     }
                 case Priority.Reproduce:
                     if (PreyColliders.Length != 0)
@@ -90,15 +91,15 @@ namespace EcosystemSimulation
                             if(animal.ReproductionUrge >= 50)
                                 return new MatingAction(this, animal);
                         }
-                        return new SearchAction(this, () => PreyColliders,  new Vector3(25, 0, 25));
+                        return new SearchAction(this, () => PreyColliders, GetSearchDestination());
                     }
                     else
                     {
-                        return new SearchAction(this, () => PreyColliders, new Vector3(25, 0, 25));
+                        return new SearchAction(this, () => PreyColliders, GetSearchDestination());
                     }
 
                 default:
-                    return new SearchAction(this, () => PlantColliders, new Vector3(25, 0, 25)); ;
+                    return new SearchAction(this, () => PlantColliders, GetSearchDestination()); ;
 
             }
         }

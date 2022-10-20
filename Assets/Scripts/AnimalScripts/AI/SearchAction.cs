@@ -24,8 +24,7 @@ namespace EcosystemSimulation
 
         public override void OnComplete()
         {
-            //Collider collider = performer.FindNearestCollider(getColliders());
-            //performer.currentAction = new EatingAction(performer, GetComponent<>)
+            
             performer.currentAction = null;
         }
 
@@ -36,7 +35,7 @@ namespace EcosystemSimulation
 
         public override bool AreConditionsMet()
         {
-            return getColliders().Length != 0;
+            return (getColliders().Length != 0 || Vector3.Distance(performer.gameObject.Position(), actionDestination) < 0.7f);
         }
     }
 }

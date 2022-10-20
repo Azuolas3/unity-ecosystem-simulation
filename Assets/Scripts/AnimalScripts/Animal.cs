@@ -72,6 +72,7 @@ namespace EcosystemSimulation
                 Debug.Log("Needs action  " + animalObject.name + currentAction);
                 currentDestination = currentAction.actionDestination;
             }
+            Debug.Log("Current Action  " + currentAction);
             navAgent.SetDestination(currentDestination);
 
             if (currentAction.AreConditionsMet())
@@ -126,6 +127,31 @@ namespace EcosystemSimulation
             }
 
             return nearestCollider;
+        }
+
+        protected Vector3 GetSearchDestination()
+        {
+            Vector3 position = gameObject.Position();
+            float randomAngle;
+
+            float x;
+            float z;
+
+            int loopCap = 0;
+            do
+            {
+                randomAngle = Random.Range(0, 360);
+                x = (Mathf.Cos(randomAngle) * lineOfSightRadius * 5) + position.x;
+                z = (Mathf.Sin(randomAngle) * lineOfSightRadius * 5) + position.z;
+                loopCap++;
+            } while (IsOutOfBounds(new Vector3(x, 0, z)) && loopCap < 16);
+            return new Vector3(x, 0, z);
+        }
+
+        private bool IsOutOfBounds(Vector3 position)
+        {
+            Debug.Log(position + new Vector3(0, 1, 0));
+            return !Physics.Raycast(position + new Vector3(0, 1, 0), Vector3.down, 5);  // Launches raycast from vector offset directly downward to find if is out of bounds
         }
 
         protected abstract Priority GetPriority();

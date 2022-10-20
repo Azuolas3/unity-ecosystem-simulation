@@ -12,7 +12,7 @@ namespace EcosystemSimulation
         {
             performer = actionPerformer;
             this.matingPartner = matingPartner;
-            actionDestination = matingPartner.gameObject.transform.position;
+            actionDestination = matingPartner.gameObject.Position();
         }
 
         public override void Execute()
@@ -35,7 +35,7 @@ namespace EcosystemSimulation
 
         public override bool AreConditionsMet()
         {
-            return Vector3.Distance(performer.gameObject.transform.position, matingPartner.gameObject.transform.position) < 0.3f;
+            return Vector3.Distance(performer.gameObject.transform.position, matingPartner.gameObject.Position()) < 0.3f;
         }
     }
 }

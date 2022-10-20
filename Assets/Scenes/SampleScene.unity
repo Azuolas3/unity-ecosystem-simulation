@@ -495,6 +495,7 @@ MonoBehaviour:
   width: 50
   length: 50
   navMeshSurface: {fileID: 36827615}
+  mapCollider: {fileID: 1302744929}
   meshFilter: {fileID: 1302744926}
   meshRenderer: {fileID: 1302744925}
 --- !u!114 &676832268
@@ -1166,6 +1167,7 @@ GameObject:
   - component: {fileID: 1302744926}
   - component: {fileID: 1302744925}
   - component: {fileID: 1302744928}
+  - component: {fileID: 1302744929}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -1268,6 +1270,19 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
+--- !u!65 &1302744929
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302744924}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1370552705
 GameObject:
   m_ObjectHideFlags: 0

@@ -48,8 +48,8 @@ namespace EcosystemSimulation
 
                             occupiedTilesMap[x, y] = true;
                             preyCount++;
-                            //if(preyCount == 5)
-                                //return;
+                            //if (preyCount == 1)
+                            //    return;
                         }
                     }
                 }
