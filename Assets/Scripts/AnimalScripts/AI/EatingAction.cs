@@ -41,6 +41,7 @@ namespace EcosystemSimulation
 
         public override void Cancel()
         {
+            performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }
 

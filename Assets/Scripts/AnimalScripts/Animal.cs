@@ -7,7 +7,7 @@ namespace EcosystemSimulation
 {
     public abstract class Animal : MonoBehaviour
     {
-        protected enum Priority
+        public enum Priority
         {
             None, 
             FindWater, FindFood,
@@ -15,9 +15,12 @@ namespace EcosystemSimulation
             RunAway
         }
 
-        [SerializeField]
-        protected Priority currentPriority;
-        [SerializeField]
+        public enum Gender
+        {
+            Male, Female
+        }
+
+        public Priority currentPriority;
         public Vector3 currentDestination;
         public Action currentAction;
 
@@ -27,6 +30,7 @@ namespace EcosystemSimulation
         [SerializeField]
         protected float hunger;
         protected float thirst;
+        [SerializeField]
         protected float reproductionUrge;
 
         public float Hunger 
@@ -35,18 +39,14 @@ namespace EcosystemSimulation
             set { hunger = value; }
         }
 
-        protected float ReproductionUrge
+        public float ReproductionUrge
         {
-            get { return Hunger; }
-            set { reproductionUrge = (hunger + thirst) / 2; }
+            get { return (hunger + thirst) / 2; }
+            set { reproductionUrge = value; }
         }
 
         protected float movementSpeed;
-        protected float rotationSpeed = 10f;
         protected float lineOfSightRadius;
-
-        [SerializeField]
-        private bool test;
 
         protected bool NeedsDestination { get { return animalObject.transform.position == currentDestination; } }
         protected bool NeedsAction { get { return currentAction == null; } }
@@ -62,10 +62,9 @@ namespace EcosystemSimulation
 
         public void Update()
         {
-            frameCount++;
+            reproductionUrge = ReproductionUrge;
             currentPriority = GetPriority();
             //Debug.Log(currentPriority);
-            test = NeedsAction;
             if (NeedsAction)
             {
                 //Debug.Log("Needs action  " + animalObject.name);
@@ -129,11 +128,10 @@ namespace EcosystemSimulation
             return nearestCollider;
         }
 
-        protected abstract void Move(Vector3 destination);
-        protected abstract void RotateTowards(Vector3 destination);
         protected abstract Priority GetPriority();
         protected abstract Vector3 GetNextDestination();
         protected abstract Action GetNextAction();
+        protected abstract Animal GetMatingPartner();
     }
 }
 

@@ -17,24 +17,6 @@ namespace EcosystemSimulation
         private int nutritionalValue;
         public int NutritionalValue { get { return nutritionalValue; } }
 
-        protected override void Move(Vector3 destination)
-        {
-            float step = movementSpeed * Time.deltaTime;
-            animalObject.transform.position = Vector3.MoveTowards(animalObject.transform.position, destination, step);
-
-
-        }
-
-        protected override void RotateTowards(Vector3 destination)
-        {
-            Vector3 targetDirection = destination - animalObject.transform.position;
-            float step = rotationSpeed * Time.deltaTime;
-
-            Vector3 direction = Vector3.RotateTowards(animalObject.transform.forward, targetDirection, step, 0f); 
-
-            animalObject.transform.rotation = Quaternion.LookRotation(direction);
-        }
-
         protected override Priority GetPriority()
         {
             //Collider[] predatorColliders = fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask);
@@ -49,12 +31,15 @@ namespace EcosystemSimulation
             }
             else
             {
-                if(hunger < 100 && hunger <= thirst)
+                if(hunger < 100 && Hunger <= thirst)
                     return Priority.FindFood;
-                if(thirst < 100 && thirst <= hunger)
+                if(thirst < 100 && thirst <= Hunger)
                     return Priority.FindWater;
-                if(PreyColliders.Length != 0 && reproductionUrge > 70 && hunger > 50 && thirst > 50)
+                if(ReproductionUrge > 70 && Hunger > 50 && thirst > 50)
+                {
+                    Debug.Log("NORO YRA");
                     return Priority.Reproduce;
+                }
 
                 return Priority.None;
             }
@@ -88,7 +73,6 @@ namespace EcosystemSimulation
                     if (PlantColliders.Length != 0)
                     {
                         Collider collider = FindNearestCollider(PlantColliders);
-                        Debug.Log(collider + " " + animalObject.name);
                         Vector3 destination =  collider.gameObject.transform.position;
                         return new EatingAction(this, collider.GetComponent<IEatable>(), destination);
                     }
@@ -96,15 +80,44 @@ namespace EcosystemSimulation
                     {
                         return new SearchAction(this, () => PlantColliders, new Vector3(25, 0, 25));
                     }
+                case Priority.Reproduce:
+                    if (PreyColliders.Length != 0)
+                    {
+                        Collider nearestCollider = FindNearestCollider(PreyColliders);
+                        foreach(Collider collider in PreyColliders)
+                        {
+                            Animal animal = collider.GetComponent<Animal>();
+                            if(animal.ReproductionUrge >= 50)
+                                return new MatingAction(this, animal);
+                        }
+                        return new SearchAction(this, () => PreyColliders,  new Vector3(25, 0, 25));
+                    }
+                    else
+                    {
+                        return new SearchAction(this, () => PreyColliders, new Vector3(25, 0, 25));
+                    }
+
                 default:
                     return new SearchAction(this, () => PlantColliders, new Vector3(25, 0, 25)); ;
 
             }
         }
 
+        protected override Animal GetMatingPartner()
+        {
+            foreach (Collider collider in PreyColliders)
+            {
+                Animal animal = collider.GetComponent<Animal>();
+                if (animal.ReproductionUrge >= 50)
+                    return animal;
+            }
+            return null;
+        }
+
         public void Eat()
         {
             Destroy(gameObject);
+            gameObject.GetComponent<Collider>().enabled = false;
         }
 
         public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, int baseNutritionalValue)
