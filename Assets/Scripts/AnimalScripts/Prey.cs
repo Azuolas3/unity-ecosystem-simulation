@@ -31,11 +31,11 @@ namespace EcosystemSimulation
             }
             else
             {
-                if(hunger < 100 && Hunger <= thirst)
+                if(nourishment < 100 && Nourishment <= Hydration)
                     return Priority.FindFood;
-                if(thirst < 100 && thirst <= Hunger)
+                if(hydration < 100 && Hydration <= Nourishment)
                     return Priority.FindWater;
-                if (ReproductionUrge > 70 && Hunger > 50 && thirst > 50)
+                if (ReproductionUrge > 70 && Nourishment > 50 && Hydration > 50)
                 {
                     Debug.Log("NORO YRA");
                     return Priority.Reproduce;
@@ -47,22 +47,7 @@ namespace EcosystemSimulation
 
         protected override Vector3 GetNextDestination()
         {
-            switch(currentPriority)
-            {
-                case Priority.FindFood:
-                    if(PlantColliders.Length != 0)
-                    {
-                        Collider collider = FindNearestCollider(PlantColliders);
-                        return collider.gameObject.transform.position;
-                    }
-                    else 
-                    {
-                        return new Vector3(25, 0, 25);
-                    }
-                default:
-                    return gameObject.transform.position;
-                    
-            }
+            return Vector3.down;
         }
 
         protected override Action GetNextAction()
@@ -78,9 +63,21 @@ namespace EcosystemSimulation
                     }
                     else
                     {
-
                         return new SearchAction(this, () => PlantColliders, GetSearchDestination());
                     }
+
+                case Priority.FindWater:
+                    if (WaterColliders.Length != 0)
+                    {
+                        Collider collider = FindNearestCollider(WaterColliders);
+                        Vector3 destination = collider.gameObject.transform.position;
+                        return new DrinkingAction(this, destination);
+                    }
+                    else
+                    {
+                        return new SearchAction(this, () => WaterColliders, GetSearchDestination());
+                    }
+
                 case Priority.Reproduce:
                     if (PreyColliders.Length != 0)
                     {
@@ -97,7 +94,6 @@ namespace EcosystemSimulation
                     {
                         return new SearchAction(this, () => PreyColliders, GetSearchDestination());
                     }
-
                 default:
                     return new SearchAction(this, () => PlantColliders, GetSearchDestination()); ;
 
@@ -127,8 +123,8 @@ namespace EcosystemSimulation
             this.animalObject = animalObject;
             fov = new FieldOfView();
 
-            hunger = baseHunger;
-            thirst = baseThirst;
+            nourishment = baseHunger;
+            hydration = baseThirst;
             movementSpeed = baseSpeed;
             lineOfSightRadius = baseSightRadius;
             currentDestination = animalObject.transform.position;

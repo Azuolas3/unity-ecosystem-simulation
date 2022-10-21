@@ -18,7 +18,7 @@ namespace EcosystemSimulation
         public override void Execute()
         {
             GameObject child = Object.Instantiate(performer.gameObject, performer.gameObject.transform.position, Quaternion.identity);
-            child.GetComponent<Animal>().Init(child, performer.Hunger, 100, 20, 5);
+            child.GetComponent<Animal>().Init(child, performer.Nourishment, 100, 20, 5);
             OnComplete();
         }
 

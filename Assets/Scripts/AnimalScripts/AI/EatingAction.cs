@@ -20,9 +20,9 @@ namespace EcosystemSimulation
         public override void Execute()
         {
             //Debug.Log(food + " " + food.NutritionalValue);
-            performer.Hunger += food.NutritionalValue;
-            if (performer.Hunger > 100)
-                performer.Hunger = 100;
+            performer.Nourishment += food.NutritionalValue;
+            if (performer.Nourishment > 100)
+                performer.Nourishment = 100;
             //Debug.Log(performer.animalObject.name + " " + food);
             food.Eat();
             OnComplete();

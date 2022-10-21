@@ -27,21 +27,40 @@ namespace EcosystemSimulation
         public GameObject animalObject;
         protected FieldOfView fov;
 
+
         [SerializeField]
-        protected float hunger;
-        protected float thirst;
+        protected float health;
+        [SerializeField]
+        protected float nourishment;
+        [SerializeField]
+        protected float hydration;
         [SerializeField]
         protected float reproductionUrge;
 
-        public float Hunger 
+        private float hungerTick = 0.02f;
+        private float thirstTick = 0.02f;
+
+
+        public float Health
         {
-            get { return hunger; }
-            set { hunger = value; }
+            get { return health; }
+            set { health = value; }
+        }
+        public float Nourishment 
+        {
+            get { return nourishment; }
+            set { nourishment = value; }
+        }
+
+        public float Hydration
+        {
+            get { return hydration; }
+            set { hydration = value; }
         }
 
         public float ReproductionUrge
         {
-            get { return (hunger + thirst) / 2; }
+            get { return (nourishment + hydration) / 2; }
             set { reproductionUrge = value; }
         }
 
@@ -59,25 +78,43 @@ namespace EcosystemSimulation
         protected Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PlantLayerMask); } }
         protected Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PreyLayerMask); } }
 
+        public void Start()
+        {
+            Health = 100;
+        }
+
         public void Update()
         {
-            reproductionUrge = ReproductionUrge;
             currentPriority = GetPriority();
             //Debug.Log(currentPriority);
             if (NeedsAction)
             {
                 //Debug.Log("Needs action  " + animalObject.name);
                 currentAction = GetNextAction();
-                Debug.Log("Needs action  " + animalObject.name + currentAction);
+                //Debug.Log("Needs action  " + animalObject.name + currentAction);
                 currentDestination = currentAction.actionDestination;
             }
-            Debug.Log("Current Action  " + currentAction);
+            //Debug.Log("Current Action  " + currentAction);
             navAgent.SetDestination(currentDestination);
 
             if (currentAction.AreConditionsMet())
             {
                 currentAction.Execute();
             }
+
+            Nourishment = Mathf.Clamp(Nourishment - hungerTick, 0, 100);
+            Hydration = Mathf.Clamp(Hydration - thirstTick, 0, 100);
+
+            reproductionUrge = ReproductionUrge;
+
+            if (Nourishment == 0)
+                Health -= hungerTick;
+
+            if (Hydration == 0)
+                Health -= thirstTick;
+
+            if (Health <= 0)
+                Destroy(gameObject);
         }
 
         //private void LateUpdate()
@@ -95,8 +132,8 @@ namespace EcosystemSimulation
             this.animalObject = animalObject;
             fov = new FieldOfView();
 
-            hunger = baseHunger;
-            thirst = baseThirst;
+            nourishment = baseHunger;
+            hydration = baseThirst;
             movementSpeed = baseSpeed;
             lineOfSightRadius = baseSightRadius;
             currentDestination = animalObject.transform.position;
@@ -149,13 +186,11 @@ namespace EcosystemSimulation
 
         private bool IsOutOfBounds(Vector3 position)
         {
-            Debug.Log(position + new Vector3(0, 2, 0));
             return !Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5);  // Launches raycast from vector offset directly downward to find if is out of bounds
         }
 
         private bool IsInWater(Vector3 position)
         {
-            Debug.Log(position + new Vector3(0, 2, 0));
             return Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5, fov.WaterLayerMask);  // Launches raycast from vector offset directly downward to find if is out of bounds
         }
 

@@ -43,7 +43,7 @@ namespace EcosystemSimulation
                             int chosenAnimalIndex = pseudoRNG.Next(0, preyPrefabs.Length);
                             GameObject obj = Instantiate(preyPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
                             obj.transform.SetParent(instantiatedFauna.transform);
-                            obj.GetComponent<Prey>().Init(obj, 50, 100, 1, 3, 50);
+                            obj.GetComponent<Prey>().Init(obj, 50, 25, 1, 3, 50);
                             obj.name = "Rabbit" + preyCount;
 
                             occupiedTilesMap[x, y] = true;

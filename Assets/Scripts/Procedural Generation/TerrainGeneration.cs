@@ -158,18 +158,17 @@ namespace EcosystemSimulation
         private GameObject InstantiateWaterCollider(int x, int y)
         {
             GameObject obj = new GameObject();
-            Vector3 center = new Vector3(x + 0.5f, 0, y + 0.5f);
+            Vector3 position = new Vector3(x + 0.5f, 0, y + 0.5f);
             Vector3 size = new Vector3(1, 0.5f, 1);
 
             obj.layer = 4; //water layer mask
             BoxCollider collider = obj.AddComponent<BoxCollider>();
-            collider.center = center;
+            obj.transform.position = position;
             collider.size = size; // making y smaller to prevent problems with raycasts
 
             NavMeshObstacle obstacleComponent = obj.AddComponent<NavMeshObstacle>();
             obstacleComponent.carving = true;
-            obstacleComponent.center = center;
-            obstacleComponent.size = size;
+            obstacleComponent.size = size - new Vector3(0.9f, 0, 0.9f); // cutting down size of navObstacle to let animal get close to it
             return obj;
         }
 
