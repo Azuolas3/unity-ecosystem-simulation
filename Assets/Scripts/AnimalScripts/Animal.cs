@@ -55,10 +55,9 @@ namespace EcosystemSimulation
         private NavMeshAgent navAgent;
 
         protected Collider[] PredatorColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask); } }
+        protected Collider[] WaterColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.WaterLayerMask); } }
         protected Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PlantLayerMask); } }
         protected Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PreyLayerMask); } }
-
-        int frameCount = 0;
 
         public void Update()
         {
@@ -141,17 +140,23 @@ namespace EcosystemSimulation
             do
             {
                 randomAngle = Random.Range(0, 360);
-                x = (Mathf.Cos(randomAngle) * lineOfSightRadius * 5) + position.x;
-                z = (Mathf.Sin(randomAngle) * lineOfSightRadius * 5) + position.z;
+                x = (Mathf.Cos(randomAngle) * lineOfSightRadius * 2) + position.x;
+                z = (Mathf.Sin(randomAngle) * lineOfSightRadius * 2) + position.z;
                 loopCap++;
-            } while (IsOutOfBounds(new Vector3(x, 0, z)) && loopCap < 16);
+            } while ((IsOutOfBounds(new Vector3(x, 0, z)) || IsInWater(new Vector3(x, 0, z))) && loopCap < 16);
             return new Vector3(x, 0, z);
         }
 
         private bool IsOutOfBounds(Vector3 position)
         {
-            Debug.Log(position + new Vector3(0, 1, 0));
-            return !Physics.Raycast(position + new Vector3(0, 1, 0), Vector3.down, 5);  // Launches raycast from vector offset directly downward to find if is out of bounds
+            Debug.Log(position + new Vector3(0, 2, 0));
+            return !Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5);  // Launches raycast from vector offset directly downward to find if is out of bounds
+        }
+
+        private bool IsInWater(Vector3 position)
+        {
+            Debug.Log(position + new Vector3(0, 2, 0));
+            return Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5, fov.WaterLayerMask);  // Launches raycast from vector offset directly downward to find if is out of bounds
         }
 
         protected abstract Priority GetPriority();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.AI.Navigation;
 using EcosystemSimulation;
+using UnityEngine.AI;
 
 namespace EcosystemSimulation
 {
@@ -14,7 +15,7 @@ namespace EcosystemSimulation
         [SerializeField]
         private TerrainType[] terrainTypes;
 
-
+        private TerrainName[,] terrainMap;
 
         //private GameObject[] instantiatedObjects;
         private GameObject instantiatedObjects;
@@ -39,16 +40,16 @@ namespace EcosystemSimulation
         [SerializeField]
         private int length;
 
-
-        public static int MapLength { get; set; }
-
         [SerializeField]
         public int mapSeed { get; set; }
 
         public NavMeshSurface navMeshSurface;
 
         [SerializeField]
-        private BoxCollider mapCollider;
+        private MeshCollider mapCollider;
+        private GameObject waterColliderObject;
+        private List<GameObject> waterColliderObjects = new List<GameObject>();
+
         public MeshFilter meshFilter;
         public MeshRenderer meshRenderer;
         TextureGenerator textureGenerator = new TextureGenerator();
@@ -62,7 +63,7 @@ namespace EcosystemSimulation
 
             Noise noiseGenerator = new Noise();
             float[,] noiseMap = noiseGenerator.GenerateNoiseMap(mapSeed, width, length, noiseScale, octaves, persistence, lacunarity, Vector2.zero);
-            TerrainName[,] terrainMap = GenerateTerrainMap(noiseMap);
+            terrainMap = GenerateTerrainMap(noiseMap);
 
             mapTexture = GenerateTexture(width, length, noiseMap);
             DrawMesh(MeshGenerator.GenerateMesh(width, length, noiseMap), mapTexture);
@@ -105,6 +106,7 @@ namespace EcosystemSimulation
         public void ClearPreviousGeneration()
         {
             Destroy(instantiatedObjects);
+            Destroy(waterColliderObject);
             floraGenerator.ClearGeneratedFlora();
             faunaGenerator.ClearGeneratedFauna();
         }
@@ -132,13 +134,49 @@ namespace EcosystemSimulation
 
         private void SetupCollider()
         {
-            mapCollider.size = new Vector3(width-1, 0, length-1);
-            mapCollider.center = new Vector3((float)(width-1)/2, 0, (float)(length-1)/2);
+            mapCollider.sharedMesh = meshFilter.sharedMesh;
+            SetupWaterCollider();
+        }
+
+        private void SetupWaterCollider()
+        {
+            waterColliderObject = new GameObject("Water Collider");
+            for (int y = 0; y < length; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if(terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater)
+                    {
+                        GameObject temp = InstantiateWaterCollider(x, y);
+                        temp.transform.SetParent(waterColliderObject.transform);
+                        waterColliderObjects.Add(temp);
+                    }
+                }
+            }
+        }
+
+        private GameObject InstantiateWaterCollider(int x, int y)
+        {
+            GameObject obj = new GameObject();
+            Vector3 center = new Vector3(x + 0.5f, 0, y + 0.5f);
+            Vector3 size = new Vector3(1, 0.5f, 1);
+
+            obj.layer = 4; //water layer mask
+            BoxCollider collider = obj.AddComponent<BoxCollider>();
+            collider.center = center;
+            collider.size = size; // making y smaller to prevent problems with raycasts
+
+            NavMeshObstacle obstacleComponent = obj.AddComponent<NavMeshObstacle>();
+            obstacleComponent.carving = true;
+            obstacleComponent.center = center;
+            obstacleComponent.size = size;
+            return obj;
         }
 
         public void DrawMesh(MeshData meshData, Texture2D texture)
         {
-            meshFilter.sharedMesh = meshData.CreateMesh();
+            Mesh mesh = meshData.CreateMesh();
+            meshFilter.sharedMesh = mesh;
             meshRenderer.sharedMaterial.mainTexture = texture;
         }
 
