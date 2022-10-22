@@ -28,7 +28,9 @@ namespace EcosystemSimulation
         public void Start()
         {
             Eaters = new List<Animal>();
+
             prefabFullScale = gameObject.transform.lossyScale;
+            gameObject.transform.localScale = Vector3.zero;
         }
 
         public void Update()
@@ -58,20 +60,8 @@ namespace EcosystemSimulation
             GrowthProgress = growthProgress;
             this.nutritionalValue = nutritionalValue;
             plant = gameObject;
-            //prefabFullScale = gameObject.transform.lossyScale;
+            prefabFullScale = gameObject.transform.lossyScale;
         }
-
-        //private IEnumerator SeedDispersalCountdown()
-        //{
-        //    while(true)
-        //    {
-        //        if (GrowthProgress == 1 && Random.Range(1, 100) > 90)
-        //        {
-        //            DisperseSeeds();
-        //        }
-        //        yield return new WaitForSeconds(1f);
-        //    }
-        //}
 
         private void DisperseSeeds()
         {
@@ -83,11 +73,10 @@ namespace EcosystemSimulation
             if (Random.value < 0.5f)
                 offset.z *= -1;
 
-
             GameObject plant = Instantiate(gameObject, gameObject.transform.position + offset, Quaternion.identity);
             plant.transform.SetParent(gameObject.transform.parent);
-            //plant.GetComponent<>
-            Debug.Log("dispersed");
+            //plant.GetComponent<Plant>().Init(NutritionalValue, 0);
+            //plant.transform.localScale = Vector3.zero;
         }
     }
 }

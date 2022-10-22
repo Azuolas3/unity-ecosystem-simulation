@@ -538,8 +538,8 @@ MonoBehaviour:
   lacunarity: 1
   treeDensity: 0
   plantDensity: 0
-  width: 50
-  length: 50
+  width: 60
+  length: 60
   navMeshSurface: {fileID: 36827615}
   mapCollider: {fileID: 1302744930}
   meshFilter: {fileID: 1302744926}
@@ -611,7 +611,7 @@ MonoBehaviour:
   preyPrefabs:
   - {fileID: 2545046031021082620, guid: 5b3c0912ccdff354db866651e4f68b5b, type: 3}
   predatorDensity: 1
-  preyDensity: 5
+  preyDensity: 10
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
