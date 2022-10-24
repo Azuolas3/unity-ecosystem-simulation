@@ -17,17 +17,8 @@ namespace EcosystemSimulation
 
         public override void Execute()
         {
-            Debug.Log(matingPartner.gameObject.name + matingPartner.currentAction);
             matingPartner.genderHandler.HandleMating();
-            GameObject childObject = Object.Instantiate(performer.gameObject, performer.gameObject.transform.position, Quaternion.identity);
-            Animal child = childObject.GetComponent<Animal>();
-            Debug.Log("dud born" + performer.gameObject.name + " " + matingPartner.gameObject.name);
-            Debug.Log(matingPartner.gameObject.name + " " + matingPartner.genderHandler.IsAvailableForMating());
-
-
-            child.isGrownUp = false;
-            child.Init(childObject, performer.Nourishment, performer.Hydration, 20, 5, performer.genderHandler.GetRandomGender(child));
-            Debug.Log(childObject.name + " " +child.genderHandler.IsAvailableForMating());
+            Debug.Log($"Mated {matingPartner.gameObject.name}");
             OnComplete();
         }
 

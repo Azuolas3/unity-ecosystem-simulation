@@ -12,9 +12,9 @@ namespace EcosystemSimulation
 
         public bool hasMate = false;
 
-        public GenderHandler GetRandomGender(Animal animal)
+        public static GenderHandler GetRandomGender(Animal animal)
         {
-            GenderHandler gender = Random.Range(0, 2) == 0 ? new MaleHandler(animal) : new FemaleHandler(animal, 10);
+            GenderHandler gender = Random.Range(0, 2) == 0 ? new MaleHandler(animal) : new FemaleHandler(animal, 5);
             return gender;
         }
 

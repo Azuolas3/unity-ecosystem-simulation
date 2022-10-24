@@ -46,7 +46,7 @@ namespace EcosystemSimulation
                             Prey prey = obj.GetComponent<Prey>();
                             obj.transform.SetParent(instantiatedFauna.transform);
 
-                            GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 10);
+                            GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 5);
                             obj.GetComponent<Prey>().Init(obj, 50, 25, 1, 10, 50, gender);
                             obj.name = "Rabbit" + preyCount;
 

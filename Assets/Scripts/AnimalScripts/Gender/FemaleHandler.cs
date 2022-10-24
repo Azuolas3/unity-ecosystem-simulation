@@ -30,7 +30,9 @@ namespace EcosystemSimulation
         {
             baseAnimal.currentAction.Cancel();
             baseAnimal.currentPriority = Animal.Priority.None;
+            hasMate = false;
             isPregnant = true;
+            baseAnimal.gameObject.AddComponent<Pregnancy>().CallPregnancyCouroutine(gestationPeriod);
         }
 
         public override bool IsAvailableForMating()

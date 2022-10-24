@@ -57,10 +57,6 @@ namespace EcosystemSimulation
 
         public void GenerateTerrain()
         {
-            //instantiatedObjects = new GameObject[width * length];
-            //instantiatedObjects = new GameObject();
-
-
             Noise noiseGenerator = new Noise();
             float[,] noiseMap = noiseGenerator.GenerateNoiseMap(mapSeed, width, length, noiseScale, octaves, persistence, lacunarity, Vector2.zero);
             terrainMap = GenerateTerrainMap(noiseMap);
@@ -145,7 +141,7 @@ namespace EcosystemSimulation
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if(terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater)
+                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && IsNeighbouringLand(x, y))
                     {
                         GameObject temp = InstantiateWaterCollider(x, y);
                         temp.transform.SetParent(waterColliderObject.transform);
@@ -153,6 +149,14 @@ namespace EcosystemSimulation
                     }
                 }
             }
+        }
+
+        private bool IsNeighbouringLand(int x, int y)
+        {
+            if (terrainMap[x, y + 1] == TerrainName.Sand || terrainMap[x, y - 1] == TerrainName.Sand ||
+                terrainMap[x + 1, y] == TerrainName.Sand || terrainMap[x - 1, y] == TerrainName.Sand)
+                return true;
+            return false;
         }
 
         private GameObject InstantiateWaterCollider(int x, int y)
