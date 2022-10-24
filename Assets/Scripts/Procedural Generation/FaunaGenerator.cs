@@ -17,6 +17,7 @@ namespace EcosystemSimulation
         private float preyDensity;
 
         private int preyCount = 0;
+        private int predatorCount = 0;
 
         TerrainName[,] terrainMap;
         private int seed;
@@ -42,8 +43,11 @@ namespace EcosystemSimulation
                         {
                             int chosenAnimalIndex = pseudoRNG.Next(0, preyPrefabs.Length);
                             GameObject obj = Instantiate(preyPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
+                            Prey prey = obj.GetComponent<Prey>();
                             obj.transform.SetParent(instantiatedFauna.transform);
-                            obj.GetComponent<Prey>().Init(obj, 50, 25, 1, 3, 50);
+
+                            GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 10);
+                            obj.GetComponent<Prey>().Init(obj, 50, 25, 1, 10, 50, gender);
                             obj.name = "Rabbit" + preyCount;
 
                             occupiedTilesMap[x, y] = true;
@@ -71,10 +75,14 @@ namespace EcosystemSimulation
                         {
                             int chosenAnimalIndex = pseudoRNG.Next(0, predatorPrefabs.Length);
                             GameObject obj = Instantiate(predatorPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
+                            Animal animal = obj.GetComponent<Animal>();
                             obj.transform.SetParent(instantiatedFauna.transform);
-                            obj.GetComponent<Animal>().Init(obj, 50, 50, 1, 3);
+
+                            GenderHandler gender = predatorCount % 2 == 0 ? new MaleHandler(animal) : new FemaleHandler(animal, 10);
+                            obj.GetComponent<Animal>().Init(obj, 50, 50, 1, 3, gender);
 
                             occupiedTilesMap[x, y] = true;
+                            predatorCount++;
                         }
                     }
                 }

@@ -25,21 +25,22 @@ namespace EcosystemSimulation
             {
                 return Priority.RunAway;
             }
-            else if(currentPriority != Priority.None)
-            {
-                return currentPriority;
-            }
+            //else if(currentPriority != Priority.None)
+            //{
+            //    return currentPriority;
+            //}
             else
             {
-                if(nourishment < 100 && Nourishment <= Hydration)
-                    return Priority.FindFood;
-                if(hydration < 100 && Hydration <= Nourishment)
-                    return Priority.FindWater;
-                if (ReproductionUrge > 70 && Nourishment > 50 && Hydration > 50)
+                if (ReproductionUrge > 70 && Nourishment > 50 && Hydration > 50 && genderHandler.IsAvailableForMating())
                 {
                     Debug.Log("NORO YRA");
                     return Priority.Reproduce;
                 }
+
+                if (nourishment < 100 && Nourishment <= Hydration)
+                    return Priority.FindFood;
+                if(hydration < 100 && Hydration <= Nourishment)
+                    return Priority.FindWater;
 
                 return Priority.None;
             }
@@ -79,21 +80,7 @@ namespace EcosystemSimulation
                     }
 
                 case Priority.Reproduce:
-                    if (PreyColliders.Length != 0)
-                    {
-                        Collider nearestCollider = FindNearestCollider(PreyColliders);
-                        foreach(Collider collider in PreyColliders)
-                        {
-                            Animal animal = collider.GetComponent<Animal>();
-                            if(animal.ReproductionUrge >= 50)
-                                return new MatingAction(this, animal);
-                        }
-                        return new SearchAction(this, () => PreyColliders, GetSearchDestination());
-                    }
-                    else
-                    {
-                        return new SearchAction(this, () => PreyColliders, GetSearchDestination());
-                    }
+                    return genderHandler.HandleReproductionPriority();
                 default:
                     return new SearchAction(this, () => PlantColliders, GetSearchDestination()); ;
 
@@ -117,7 +104,7 @@ namespace EcosystemSimulation
             gameObject.GetComponent<Collider>().enabled = false;
         }
 
-        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, int baseNutritionalValue)
+        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, int baseNutritionalValue, GenderHandler gender)
         {
             eaters = new List<Animal>();
             this.animalObject = animalObject;
@@ -129,6 +116,9 @@ namespace EcosystemSimulation
             lineOfSightRadius = baseSightRadius;
             currentDestination = animalObject.transform.position;
             nutritionalValue = baseNutritionalValue;
+
+            Debug.Log(gender);
+            this.genderHandler = gender;
             //Collider[] colliders = fov.GetNearbyColliders(animalObject.transform.position, 3);
             //foreach(Collider collider in colliders)
             //{

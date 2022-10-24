@@ -14,9 +14,7 @@ namespace EcosystemSimulation
 
         public override void Execute()
         {
-            performer.Hydration += 20;
-            if (performer.Hydration > 100)
-                performer.Hydration = 100;
+            performer.Hydration = 100;
 
             OnComplete();
         }

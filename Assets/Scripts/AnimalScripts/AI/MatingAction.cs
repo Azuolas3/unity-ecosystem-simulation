@@ -17,8 +17,17 @@ namespace EcosystemSimulation
 
         public override void Execute()
         {
-            GameObject child = Object.Instantiate(performer.gameObject, performer.gameObject.transform.position, Quaternion.identity);
-            child.GetComponent<Animal>().Init(child, performer.Nourishment, 100, 20, 5);
+            Debug.Log(matingPartner.gameObject.name + matingPartner.currentAction);
+            matingPartner.genderHandler.HandleMating();
+            GameObject childObject = Object.Instantiate(performer.gameObject, performer.gameObject.transform.position, Quaternion.identity);
+            Animal child = childObject.GetComponent<Animal>();
+            Debug.Log("dud born" + performer.gameObject.name + " " + matingPartner.gameObject.name);
+            Debug.Log(matingPartner.gameObject.name + " " + matingPartner.genderHandler.IsAvailableForMating());
+
+
+            child.isGrownUp = false;
+            child.Init(childObject, performer.Nourishment, performer.Hydration, 20, 5, performer.genderHandler.GetRandomGender(child));
+            Debug.Log(childObject.name + " " +child.genderHandler.IsAvailableForMating());
             OnComplete();
         }
 
@@ -34,8 +43,8 @@ namespace EcosystemSimulation
         }
 
         public override bool AreConditionsMet()
-        {
-            return Vector3.Distance(performer.gameObject.transform.position, matingPartner.gameObject.Position()) < 0.3f;
+        {            
+            return Vector3.Distance(performer.gameObject.transform.position, matingPartner.gameObject.Position()) < 0.7f;
         }
     }
 }

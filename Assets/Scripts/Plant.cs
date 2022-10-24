@@ -15,7 +15,6 @@ namespace EcosystemSimulation
         private float growthTick = 0.001f;
 
         private Vector3 prefabFullScale;
-
         public List<Animal> Eaters
         {
             get { return eaters; }

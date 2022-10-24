@@ -15,11 +15,6 @@ namespace EcosystemSimulation
             RunAway
         }
 
-        public enum Gender
-        {
-            Male, Female
-        }
-
         public Priority currentPriority;
         public Vector3 currentDestination;
         public Action currentAction;
@@ -37,9 +32,16 @@ namespace EcosystemSimulation
         [SerializeField]
         protected float reproductionUrge;
 
-        private float hungerTick = 0.02f;
-        private float thirstTick = 0.02f;
+        private float hungerTick = 0.01f;
+        private float thirstTick = 0.01f;
 
+        [SerializeField]
+        public bool isGrownUp = true;
+
+        public GenderHandler genderHandler;
+
+        [SerializeField]
+        AnimalGender gendertest;
 
         public float Health
         {
@@ -73,10 +75,10 @@ namespace EcosystemSimulation
         [SerializeField]
         private NavMeshAgent navAgent;
 
-        protected Collider[] PredatorColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask); } }
-        protected Collider[] WaterColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.WaterLayerMask); } }
-        protected Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PlantLayerMask); } }
-        protected Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PreyLayerMask); } }
+        public Collider[] PredatorColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask); } }
+        public Collider[] WaterColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.WaterLayerMask); } }
+        public Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PlantLayerMask); } }
+        public Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PreyLayerMask); } }
 
         public void Start()
         {
@@ -85,14 +87,15 @@ namespace EcosystemSimulation
 
         public void Update()
         {
+            gendertest = genderHandler.Gender;
             currentPriority = GetPriority();
-            //Debug.Log(currentPriority);
             if (NeedsAction)
             {
                 //Debug.Log("Needs action  " + animalObject.name);
                 currentAction = GetNextAction();
                 //Debug.Log("Needs action  " + animalObject.name + currentAction);
                 currentDestination = currentAction.actionDestination;
+                //navAgent.SetDestination(currentDestination);
             }
             //Debug.Log("Current Action  " + currentAction);
             navAgent.SetDestination(currentDestination);
@@ -127,8 +130,11 @@ namespace EcosystemSimulation
         //    }
         //}
 
-        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius)
+        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, GenderHandler gender)
         {
+            currentPriority = Priority.None;
+            currentAction = null;
+
             this.animalObject = animalObject;
             fov = new FieldOfView();
 
@@ -137,13 +143,10 @@ namespace EcosystemSimulation
             movementSpeed = baseSpeed;
             lineOfSightRadius = baseSightRadius;
             currentDestination = animalObject.transform.position;
+
+            genderHandler = gender;
             currentPriority = GetPriority();
             currentAction = GetNextAction();
-            //Collider[] colliders = fov.GetNearbyColliders(animalObject.transform.position, 3);
-            //foreach(Collider collider in colliders)
-            //{
-            //    Debug.Log(collider.gameObject);
-            //}
         }
 
         public Collider FindNearestCollider(Collider[] colliders)
@@ -165,7 +168,7 @@ namespace EcosystemSimulation
             return nearestCollider;
         }
 
-        protected Vector3 GetSearchDestination()
+        public Vector3 GetSearchDestination()
         {
             Vector3 position = gameObject.Position();
             float randomAngle;
