@@ -35,6 +35,7 @@ namespace EcosystemSimulation
             {
                 //if(animal.currentAction != null) //have to check if its null cause there's a chance its the second time the animal's current action is being removed
                 animal.currentAction.Cancel();
+                Debug.Log(animal.gameObject.name + " Cancelled");
                 //food.Eaters.Remove(animal);
             }
         }

@@ -24,12 +24,13 @@ namespace EcosystemSimulation
 
         public override void OnComplete()
         {
-            
+            performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }
 
         public override void Cancel()
         {
+            performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }
 

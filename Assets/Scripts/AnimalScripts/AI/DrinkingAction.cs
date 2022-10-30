@@ -33,7 +33,7 @@ namespace EcosystemSimulation
 
         public override bool AreConditionsMet()
         {
-            return (Vector3.Distance(performer.gameObject.transform.position, actionDestination) < 0.6f);
+            return (Vector3.Distance(performer.gameObject.transform.position, actionDestination) < 0.8f);
         }
     }
 }

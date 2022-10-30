@@ -29,11 +29,11 @@ namespace EcosystemSimulation
 
                         matingAnimal.genderHandler.hasMate = true;
                         matingAnimal.currentDestination = matingAnimal.gameObject.Position();
-                        matingAnimal.currentAction = new WaitingAction(matingAnimal, 7); // 7 seconds for male to come and do the thing
+                        matingAnimal.currentAction = null;
                         return new MatingAction(baseAnimal, matingAnimal);
                     }
                 }
-                return new SearchAction(baseAnimal, () => baseAnimal.PreyColliders, baseAnimal.GetSearchDestination());
+                return new MoveToAction(baseAnimal, baseAnimal.GetSearchDestination());
             }
             else
             {

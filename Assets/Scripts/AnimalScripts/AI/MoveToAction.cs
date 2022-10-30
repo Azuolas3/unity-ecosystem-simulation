@@ -4,22 +4,18 @@ using UnityEngine;
 
 namespace EcosystemSimulation
 {
-    public class MatingAction : Action
+    public class MoveToAction : Action
     {
-        private Animal matingPartner;
 
-        public MatingAction(Animal actionPerformer, Animal matingPartner)
+        public MoveToAction(Animal actionPerformer, Vector3 destination)
         {
             performer = actionPerformer;
-            this.matingPartner = matingPartner;
-            actionDestination = matingPartner.gameObject.Position();
-            Debug.Log("hot time " + performer.name + " " + matingPartner.name + " " + matingPartner.currentAction);
+            actionDestination = destination;
         }
+
 
         public override void Execute()
         {
-            matingPartner.genderHandler.HandleMating();
-            Debug.Log($"Mated {matingPartner.gameObject.name}");
             OnComplete();
         }
 
@@ -36,9 +32,8 @@ namespace EcosystemSimulation
         }
 
         public override bool AreConditionsMet()
-        {            
-            return Vector3.Distance(performer.gameObject.Position(),matingPartner.gameObject.Position()) < 0.7f;
+        {
+            return (Vector3.Distance(performer.gameObject.Position(), actionDestination) < 0.7f);
         }
     }
 }
-

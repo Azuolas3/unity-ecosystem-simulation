@@ -141,7 +141,7 @@ namespace EcosystemSimulation
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && IsNeighbouringLand(x, y))
+                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater))
                     {
                         GameObject temp = InstantiateWaterCollider(x, y);
                         temp.transform.SetParent(waterColliderObject.transform);
@@ -153,9 +153,15 @@ namespace EcosystemSimulation
 
         private bool IsNeighbouringLand(int x, int y)
         {
-            if (terrainMap[x, y + 1] == TerrainName.Sand || terrainMap[x, y - 1] == TerrainName.Sand ||
-                terrainMap[x + 1, y] == TerrainName.Sand || terrainMap[x - 1, y] == TerrainName.Sand)
-                return true;
+            int[] offsets = { 1, -1 };
+            for(int i = 0; i < 2; i++)
+            {
+                if (x + offsets[i] < width && x + offsets[i] >= 0 && terrainMap[x + offsets[i], y] == TerrainName.Sand)
+                    return true;
+                if (y + offsets[i] < length && y + offsets[i] >= 0 && terrainMap[x, y + offsets[i]] == TerrainName.Sand)
+                    return true;
+            }
+
             return false;
         }
 

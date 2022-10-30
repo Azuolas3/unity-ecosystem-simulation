@@ -104,8 +104,11 @@ namespace EcosystemSimulation
             gameObject.GetComponent<Collider>().enabled = false;
         }
 
-        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, int baseNutritionalValue, GenderHandler gender)
+        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, int baseNutritionalValue, float growthProgress, GenderHandler gender)
         {
+            currentPriority = Priority.None;
+            currentAction = null;
+
             eaters = new List<Animal>();
             this.animalObject = animalObject;
             fov = new FieldOfView();
@@ -116,8 +119,9 @@ namespace EcosystemSimulation
             lineOfSightRadius = baseSightRadius;
             currentDestination = animalObject.transform.position;
             nutritionalValue = baseNutritionalValue;
+            size = gameObject.transform.lossyScale;
+            GrowthProgress = growthProgress;
 
-            Debug.Log(gender);
             this.genderHandler = gender;
             //Collider[] colliders = fov.GetNearbyColliders(animalObject.transform.position, 3);
             //foreach(Collider collider in colliders)

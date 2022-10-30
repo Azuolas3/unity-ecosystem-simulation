@@ -16,6 +16,8 @@ namespace EcosystemSimulation
         public WaitingAction(Animal actionPerformer, int duration)
         {
             this.performer = actionPerformer;
+            actionDestination = actionPerformer.gameObject.Position();
+
             this.duration = duration;
             timer = new Timer(duration * 1000);
             timer.Elapsed += OnTimedEvent;

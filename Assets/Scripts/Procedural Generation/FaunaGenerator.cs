@@ -47,7 +47,7 @@ namespace EcosystemSimulation
                             obj.transform.SetParent(instantiatedFauna.transform);
 
                             GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 5);
-                            obj.GetComponent<Prey>().Init(obj, 50, 25, 1, 10, 50, gender);
+                            obj.GetComponent<Prey>().Init(obj, 50, 25, 1, 10, 50, 1, gender);
                             obj.name = "Rabbit" + preyCount;
 
                             occupiedTilesMap[x, y] = true;
@@ -79,7 +79,7 @@ namespace EcosystemSimulation
                             obj.transform.SetParent(instantiatedFauna.transform);
 
                             GenderHandler gender = predatorCount % 2 == 0 ? new MaleHandler(animal) : new FemaleHandler(animal, 10);
-                            obj.GetComponent<Animal>().Init(obj, 50, 50, 1, 3, gender);
+                            obj.GetComponent<Animal>().Init(obj, 50, 50, 1, 3, 1, gender);
 
                             occupiedTilesMap[x, y] = true;
                             predatorCount++;

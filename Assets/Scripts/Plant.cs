@@ -6,9 +6,7 @@ namespace EcosystemSimulation
 {
     public class Plant : MonoBehaviour, IEatable
     {
-        private List<Animal> eaters;
-
-        private GameObject plant;
+        private List<Animal> eaters;      
 
         [SerializeField]
         public float GrowthProgress { get; set; }
@@ -34,8 +32,12 @@ namespace EcosystemSimulation
 
         public void Update()
         {
-            GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick);
-            gameObject.transform.localScale = prefabFullScale * GrowthProgress;
+            if(GrowthProgress != 1)
+            {
+                GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick);
+                gameObject.transform.localScale = prefabFullScale * GrowthProgress;
+            }
+        
 
             if(Time.frameCount % 120 == 0)
             {
@@ -58,7 +60,6 @@ namespace EcosystemSimulation
         {
             GrowthProgress = growthProgress;
             this.nutritionalValue = nutritionalValue;
-            plant = gameObject;
             prefabFullScale = gameObject.transform.lossyScale;
         }
 

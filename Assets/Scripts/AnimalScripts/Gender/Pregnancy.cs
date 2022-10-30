@@ -13,12 +13,13 @@ namespace EcosystemSimulation
 
         void GiveBirth()
         {
-            GameObject childObject = Object.Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
+            GameObject childObject = Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
             Animal child = childObject.GetComponent<Animal>();
 
 
             child.isGrownUp = false;
-            child.Init(childObject, 20, 20, 20, 5, GenderHandler.GetRandomGender(child));
+            child.Init(childObject, 20, 20, 20, 5, 0, GenderHandler.GetRandomGender(child));
+            childObject.transform.SetParent(gameObject.transform.parent);
             Debug.Log("poof");
         }
 

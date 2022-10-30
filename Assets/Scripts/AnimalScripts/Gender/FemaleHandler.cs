@@ -20,10 +20,13 @@ namespace EcosystemSimulation
 
         public override Action HandleReproductionPriority()
         {
+            if (hasMate)
+                return new WaitingAction(baseAnimal, 5);
+
             if (baseAnimal.PreyColliders.Length == 0)
                 return new SearchAction(baseAnimal, () => baseAnimal.PreyColliders, baseAnimal.GetSearchDestination());
             else
-                return new WaitingAction(baseAnimal, 3);
+                return new MoveToAction(baseAnimal, baseAnimal.GetSearchDestination());
         }
 
         public override void HandleMating()

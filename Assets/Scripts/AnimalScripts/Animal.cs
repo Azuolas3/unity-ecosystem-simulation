@@ -34,9 +34,13 @@ namespace EcosystemSimulation
 
         private float hungerTick = 0.01f;
         private float thirstTick = 0.01f;
+        private float growthTick = 0.001f;
 
+        public float GrowthProgress { get; set; }
         [SerializeField]
         public bool isGrownUp = true;
+
+        protected Vector3 size;
 
         public GenderHandler genderHandler;
 
@@ -83,25 +87,27 @@ namespace EcosystemSimulation
         public void Start()
         {
             Health = 100;
+            gendertest = genderHandler.Gender;
+            navAgent.autoRepath = false;
         }
 
         public void Update()
-        {
-            gendertest = genderHandler.Gender;
+        {       
             currentPriority = GetPriority();
+
             if (NeedsAction)
             {
-                //Debug.Log("Needs action  " + animalObject.name);
                 currentAction = GetNextAction();
-                //Debug.Log("Needs action  " + animalObject.name + currentAction);
+                //Debug.Log("Needs action  " + animalObject.name + currentAction + currentAction.actionDestination);
                 currentDestination = currentAction.actionDestination;
-                //navAgent.SetDestination(currentDestination);
             }
-            //Debug.Log("Current Action  " + currentAction);
-            navAgent.SetDestination(currentDestination);
+
+            if (navAgent.destination != currentDestination) // Unity NavMesh SetDestination() doesn't always work for some reason so we do this
+                navAgent.SetDestination(currentDestination);
 
             if (currentAction.AreConditionsMet())
             {
+                //Debug.Log("action completed " + animalObject.name + currentAction);
                 currentAction.Execute();
             }
 
@@ -109,6 +115,12 @@ namespace EcosystemSimulation
             Hydration = Mathf.Clamp(Hydration - thirstTick, 0, 100);
 
             reproductionUrge = ReproductionUrge;
+
+            if (GrowthProgress != 1)
+            {
+                GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick);
+                gameObject.transform.localScale = size * GrowthProgress;
+            }
 
             if (Nourishment == 0)
                 Health -= hungerTick;
@@ -130,7 +142,7 @@ namespace EcosystemSimulation
         //    }
         //}
 
-        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, GenderHandler gender)
+        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, float growthProgress, GenderHandler gender)
         {
             currentPriority = Priority.None;
             currentAction = null;
@@ -143,10 +155,10 @@ namespace EcosystemSimulation
             movementSpeed = baseSpeed;
             lineOfSightRadius = baseSightRadius;
             currentDestination = animalObject.transform.position;
+            size = gameObject.transform.lossyScale;
+            GrowthProgress = growthProgress;
 
             genderHandler = gender;
-            currentPriority = GetPriority();
-            currentAction = GetNextAction();
         }
 
         public Collider FindNearestCollider(Collider[] colliders)
@@ -183,7 +195,7 @@ namespace EcosystemSimulation
                 x = (Mathf.Cos(randomAngle) * lineOfSightRadius * 2) + position.x;
                 z = (Mathf.Sin(randomAngle) * lineOfSightRadius * 2) + position.z;
                 loopCap++;
-            } while ((IsOutOfBounds(new Vector3(x, 0, z)) || IsInWater(new Vector3(x, 0, z))) && loopCap < 16);
+            } while ((IsOutOfBounds(new Vector3(x, 0, z)) || IsInWater(new Vector3(x, 0, z))) && loopCap < 32);
             return new Vector3(x, 0, z);
         }
 
