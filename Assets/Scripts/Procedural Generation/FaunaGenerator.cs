@@ -12,6 +12,9 @@ namespace EcosystemSimulation
         GameObject[] preyPrefabs;
 
         [SerializeField]
+        Color[] preyColors;
+
+        [SerializeField]
         private float predatorDensity;
         [SerializeField]
         private float preyDensity;
@@ -47,7 +50,7 @@ namespace EcosystemSimulation
                             obj.transform.SetParent(instantiatedFauna.transform);
 
                             GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 5);
-                            obj.GetComponent<Prey>().Init(obj, 50, 25, 3, 10, 1, gender, Color.grey);
+                            obj.GetComponent<Prey>().Init(obj, 50, 25, 3, 10, 1, gender, GetRandomColor(preyColors));
                             obj.name = "Rabbit" + preyCount;
 
                             occupiedTilesMap[x, y] = true;
@@ -102,6 +105,12 @@ namespace EcosystemSimulation
             this.length = length;
             this.terrainMap = terrainMap;
             this.occupiedTilesMap = occupiedTilesMap;
+        }
+
+        private Color GetRandomColor(Color[] colorArray)
+        {
+            int colorIndex = Random.Range(0, colorArray.Length);
+            return colorArray[colorIndex];
         }
     }
 
