@@ -54,7 +54,7 @@ namespace EcosystemSimulation
                     }
 
                 case Priority.Reproduce:
-                    return genderHandler.HandleReproductionPriority();
+                    return genderHandler.HandleReproductionPriority(() => PredatorColliders);
                 default:
                     return new SearchAction(this, () => PredatorColliders, GetSearchDestination()); ;
 

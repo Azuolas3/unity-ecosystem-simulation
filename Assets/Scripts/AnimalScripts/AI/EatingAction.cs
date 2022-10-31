@@ -13,7 +13,7 @@ namespace EcosystemSimulation
             this.performer = actionPerformer;
             this.food = food;
             actionDestination = destination;
-            Debug.Log(food.Eaters);
+            Debug.Log(actionPerformer.name + food.Eaters + food);
             Debug.Log(performer);
             food.Eaters.Add(performer);         
         }
@@ -45,7 +45,8 @@ namespace EcosystemSimulation
 
         public override bool AreConditionsMet()
         {
-            return (Vector3.Distance(performer.gameObject.transform.position, actionDestination) < 0.3f);
+            return Mathf.Abs(performer.gameObject.Position().x - actionDestination.x) < 0.3f && //Doing this with Abs instead of Vector3.Distance for performance
+                Mathf.Abs(performer.gameObject.Position().z - actionDestination.z) < 0.3f;
         }
     }
 }

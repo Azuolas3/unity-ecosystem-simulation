@@ -14,8 +14,7 @@ namespace EcosystemSimulation
             set { eaters = value; }
         }
 
-        private int nutritionalValue;
-        public int NutritionalValue { get { return nutritionalValue; } }
+        public int NutritionalValue { get { return (int)(animalStats.Size * 30); } }
 
         protected override Priority GetPriority()
         {
@@ -76,7 +75,7 @@ namespace EcosystemSimulation
                     }
 
                 case Priority.Reproduce:
-                    return genderHandler.HandleReproductionPriority();
+                    return genderHandler.HandleReproductionPriority(() => PreyColliders);
                 default:
                     return new SearchAction(this, () => PlantColliders, GetSearchDestination()); ;
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,19 +19,20 @@ namespace EcosystemSimulation
             this.gestationPeriod = gestationPeriod;
         }
 
-        public override Action HandleReproductionPriority()
+        public override Action HandleReproductionPriority(Func<Collider[]> getColliders)
         {
             if (hasMate)
                 return new WaitingAction(baseAnimal, 5);
 
-            if (baseAnimal.PreyColliders.Length == 0)
-                return new SearchAction(baseAnimal, () => baseAnimal.PreyColliders, baseAnimal.GetSearchDestination());
+            if (getColliders().Length == 0)
+                return new SearchAction(baseAnimal, getColliders, baseAnimal.GetSearchDestination());
             else
                 return new MoveToAction(baseAnimal, baseAnimal.GetSearchDestination());
         }
 
         public override void HandleMating(Genes fatherGenes)
         {
+            Debug.Log($"{baseAnimal.gameObject.name}");
             baseAnimal.currentAction.Cancel();
             baseAnimal.currentPriority = Animal.Priority.None;
             hasMate = false;
@@ -40,7 +42,7 @@ namespace EcosystemSimulation
 
         void GiveBirth(GameObject gameObject, Genes fatherGenes)
         {
-            GameObject childObject = Object.Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
+            GameObject childObject = UnityEngine.Object.Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
             Animal child = childObject.GetComponent<Animal>();
 
 

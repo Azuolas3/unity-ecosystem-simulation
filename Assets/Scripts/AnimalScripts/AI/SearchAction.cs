@@ -36,7 +36,9 @@ namespace EcosystemSimulation
 
         public override bool AreConditionsMet()
         {
-            return (getColliders().Length != 0 || Vector3.Distance(performer.gameObject.Position(), actionDestination) < 1f);
+            return (getColliders().Length != 0 || (
+                Mathf.Abs(performer.gameObject.Position().x - actionDestination.x) < 0.7f && //Doing this with Abs instead of Vector3.Distance for performance
+               Mathf.Abs(performer.gameObject.Position().z - actionDestination.z) < 0.7f));
         }
     }
 }

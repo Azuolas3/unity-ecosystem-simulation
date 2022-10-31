@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,11 +14,11 @@ namespace EcosystemSimulation
             Gender = AnimalGender.Male;
         }
 
-        public override Action HandleReproductionPriority()
+        public override Action HandleReproductionPriority(Func<Collider[]> getColliders)
         {
-            if (baseAnimal.PreyColliders.Length != 0)
+            if (getColliders().Length != 0)
             {
-                foreach (Collider collider in baseAnimal.PreyColliders)
+                foreach (Collider collider in getColliders())
                 {
                     Animal matingAnimal = collider.GetComponent<Animal>();
                     if (IsPartnerAppropiate(matingAnimal))
@@ -35,7 +36,7 @@ namespace EcosystemSimulation
             }
             else
             {
-                return new SearchAction(baseAnimal, () => baseAnimal.PreyColliders, baseAnimal.GetSearchDestination());
+                return new SearchAction(baseAnimal, getColliders, baseAnimal.GetSearchDestination());
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace EcosystemSimulation
 
         public static GenderHandler GetRandomGender(Animal animal)
         {
-            GenderHandler gender = Random.value >= 0.5f ? new MaleHandler(animal) : new FemaleHandler(animal, 5);
+            GenderHandler gender = UnityEngine.Random.value >= 0.5f ? new MaleHandler(animal) : new FemaleHandler(animal, 5);
             return gender;
         }
 
@@ -24,7 +25,7 @@ namespace EcosystemSimulation
             else return false;
         }
 
-        public abstract Action HandleReproductionPriority();
+        public abstract Action HandleReproductionPriority(Func<Collider[]> getColliders);
         public abstract void HandleMating(Genes partnerGenes);
         public abstract bool IsAvailableForMating();
     }
