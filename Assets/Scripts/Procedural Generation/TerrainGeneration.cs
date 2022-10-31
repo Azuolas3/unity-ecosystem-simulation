@@ -76,7 +76,7 @@ namespace EcosystemSimulation
             faunaGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
             faunaGenerator.GeneratePreyFauna();
             navMeshSurface.BuildNavMesh();
-            //faunaGenerator.GeneratePredatorFauna();
+            faunaGenerator.GeneratePredatorFauna();
         }
 
         public TerrainName[,] GenerateTerrainMap(float[,] noiseMap)

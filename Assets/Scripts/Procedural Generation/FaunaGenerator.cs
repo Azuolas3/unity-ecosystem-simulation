@@ -50,7 +50,7 @@ namespace EcosystemSimulation
                             obj.transform.SetParent(instantiatedFauna.transform);
 
                             GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 5);
-                            obj.GetComponent<Prey>().Init(obj, 50, 25, 3, 10, 1, gender, GetRandomColor(preyColors));
+                            prey.Init(obj, 50, 25, 3, 10, 1, gender, GetRandomColor(preyColors));
                             obj.name = "Rabbit" + preyCount;
 
                             occupiedTilesMap[x, y] = true;
@@ -73,7 +73,7 @@ namespace EcosystemSimulation
                 {
                     if ((terrainMap[x, y] == TerrainName.Grass || terrainMap[x, y] == TerrainName.ShallowGrass) && !occupiedTilesMap[x, y])
                     {
-                        float chance = pseudoRNG.Next(0, 100);
+                        float chance = (float)pseudoRNG.NextDouble();
                         if (chance <= predatorDensity)
                         {
                             int chosenAnimalIndex = pseudoRNG.Next(0, predatorPrefabs.Length);
@@ -82,7 +82,8 @@ namespace EcosystemSimulation
                             obj.transform.SetParent(instantiatedFauna.transform);
 
                             GenderHandler gender = predatorCount % 2 == 0 ? new MaleHandler(animal) : new FemaleHandler(animal, 10);
-                            obj.GetComponent<Animal>().Init(obj, 50, 50, 1, 3, 1, gender, Color.grey);
+                            animal.Init(obj, 50, 25, 3, 10, 1, gender, GetRandomColor(preyColors));
+                            obj.name = "Wolf" + predatorCount;
 
                             occupiedTilesMap[x, y] = true;
                             predatorCount++;

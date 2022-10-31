@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4448982538451245677}
   - component: {fileID: 4457055263170997787}
   - component: {fileID: 4467492068562852217}
-  - component: {fileID: 7599763005404469356}
   m_Layer: 7
   m_Name: Wolf
   m_TagString: Untagged
@@ -84,15 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7599763005404469356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4443456332198745293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dab28f1e56214c42abcedfd209f7e42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

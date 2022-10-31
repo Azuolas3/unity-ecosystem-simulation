@@ -607,7 +607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   predatorPrefabs:
-  - {fileID: 4443456332198745293, guid: f67af7dfa3766894094b22d420bfdcd1, type: 3}
+  - {fileID: 750237448418182858, guid: 901fb66f0ab92c145b416c3e525f1c04, type: 3}
   preyPrefabs:
   - {fileID: 2545046031021082620, guid: 5b3c0912ccdff354db866651e4f68b5b, type: 3}
   preyColors:
@@ -616,8 +616,8 @@ MonoBehaviour:
   - {r: 0.9607843, g: 0.95686275, b: 0.9490196, a: 0.39215687}
   - {r: 0.65882355, g: 0.6666667, b: 0.654902, a: 0.39215687}
   - {r: 0.05882353, g: 0.05882353, b: 0.05882353, a: 0.39215687}
-  predatorDensity: 1
-  preyDensity: 10
+  predatorDensity: 0.005
+  preyDensity: 30
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

@@ -236,7 +236,6 @@ namespace EcosystemSimulation
 
         protected abstract Priority GetPriority();
         protected abstract Action GetNextAction();
-        protected abstract Animal GetMatingPartner();
     }
 
     public struct AnimalStats

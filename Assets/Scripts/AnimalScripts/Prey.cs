@@ -6,7 +6,7 @@ namespace EcosystemSimulation
 {
     public class Prey : Animal, IEatable
     {
-        private List<Animal> eaters;
+        private List<Animal> eaters = new List<Animal>();
 
         public List<Animal> Eaters 
         { 
@@ -81,17 +81,6 @@ namespace EcosystemSimulation
                     return new SearchAction(this, () => PlantColliders, GetSearchDestination()); ;
 
             }
-        }
-
-        protected override Animal GetMatingPartner()
-        {
-            foreach (Collider collider in PreyColliders)
-            {
-                Animal animal = collider.GetComponent<Animal>();
-                if (animal.ReproductionUrge >= 50)
-                    return animal;
-            }
-            return null;
         }
 
         public void Consume()

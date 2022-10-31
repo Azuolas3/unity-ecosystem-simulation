@@ -13,6 +13,8 @@ namespace EcosystemSimulation
             this.performer = actionPerformer;
             this.food = food;
             actionDestination = destination;
+            Debug.Log(food.Eaters);
+            Debug.Log(performer);
             food.Eaters.Add(performer);         
         }
 
