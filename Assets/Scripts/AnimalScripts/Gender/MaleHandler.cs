@@ -22,8 +22,6 @@ namespace EcosystemSimulation
                     Animal matingAnimal = collider.GetComponent<Animal>();
                     if (IsPartnerAppropiate(matingAnimal))
                     {
-                        Debug.Log("CIA" + matingAnimal.genderHandler.IsAvailableForMating() + " " + matingAnimal.currentAction);
-
                         if(matingAnimal.currentAction != null)
                             matingAnimal.currentAction.Cancel();
 
@@ -41,7 +39,7 @@ namespace EcosystemSimulation
             }
         }
 
-        public override void HandleMating() { }
+        public override void HandleMating(Genes partnerGenes) { }
 
         private bool IsPartnerAppropiate(Animal partner)
         {

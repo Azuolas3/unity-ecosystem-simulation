@@ -19,15 +19,23 @@ namespace EcosystemSimulation
             actionDestination = actionPerformer.gameObject.Position();
 
             this.duration = duration;
-            timer = new Timer(duration * 1000);
-            timer.Elapsed += OnTimedEvent;
-            timer.Enabled = true;
+            CouroutineHelper.Instance.CallCouroutine(WaitSeconds(duration));
+            //timer = new Timer(duration * 1000);
+            //timer.Elapsed += OnTimedEvent;
+            //timer.Enabled = true;
+
         }
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             isCountdownOver = true;
             timer.Enabled = false;
+        }
+
+        IEnumerator WaitSeconds(int duration)
+        {
+            yield return new WaitForSeconds(duration);
+            isCountdownOver = true;
         }
 
         public override void Execute()
@@ -38,7 +46,7 @@ namespace EcosystemSimulation
         public override void OnComplete()
         {
             Debug.Log("Timer completed");
-            timer.Enabled = false;
+            //timer.Enabled = false;
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }
@@ -46,7 +54,8 @@ namespace EcosystemSimulation
         public override void Cancel()
         {
             Debug.Log("Timer cancelled");
-            timer.Enabled = false;
+            //timer.Enabled = false;
+            CouroutineHelper.Instance.StopCouroutine(WaitSeconds(duration));
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }

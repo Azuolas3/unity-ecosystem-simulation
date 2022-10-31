@@ -9,7 +9,7 @@ namespace EcosystemSimulation
     {
         public enum Priority
         {
-            None, 
+            None,
             FindWater, FindFood,
             Reproduce,
             RunAway
@@ -22,6 +22,8 @@ namespace EcosystemSimulation
         public GameObject animalObject;
         protected FieldOfView fov;
 
+        protected AnimalStats animalStats;
+        public Genes genes;
 
         [SerializeField]
         protected float health;
@@ -40,8 +42,6 @@ namespace EcosystemSimulation
         [SerializeField]
         public bool isGrownUp = true;
 
-        protected Vector3 size;
-
         public GenderHandler genderHandler;
 
         [SerializeField]
@@ -52,6 +52,7 @@ namespace EcosystemSimulation
             get { return health; }
             set { health = value; }
         }
+
         public float Nourishment 
         {
             get { return nourishment; }
@@ -70,8 +71,6 @@ namespace EcosystemSimulation
             set { reproductionUrge = value; }
         }
 
-        protected float movementSpeed;
-        protected float lineOfSightRadius;
 
         protected bool NeedsDestination { get { return animalObject.transform.position == currentDestination; } }
         protected bool NeedsAction { get { return currentAction == null; } }
@@ -79,10 +78,10 @@ namespace EcosystemSimulation
         [SerializeField]
         private NavMeshAgent navAgent;
 
-        public Collider[] PredatorColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask); } }
-        public Collider[] WaterColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.WaterLayerMask); } }
-        public Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PlantLayerMask); } }
-        public Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PreyLayerMask); } }
+        public Collider[] PredatorColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, animalStats.LineOfSightRadius, fov.PredatorLayerMask); } }
+        public Collider[] WaterColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, animalStats.LineOfSightRadius, fov.WaterLayerMask); } }
+        public Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, animalStats.LineOfSightRadius, fov.PlantLayerMask); } }
+        public Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, animalStats.LineOfSightRadius, fov.PreyLayerMask); } }
 
         public void Start()
         {
@@ -100,10 +99,15 @@ namespace EcosystemSimulation
                 currentAction = GetNextAction();
                 //Debug.Log("Needs action  " + animalObject.name + currentAction + currentAction.actionDestination);
                 currentDestination = currentAction.actionDestination;
+                navAgent.SetDestination(currentDestination);
             }
 
-            if (navAgent.destination != currentDestination) // Unity NavMesh SetDestination() doesn't always work for some reason so we do this
-                navAgent.SetDestination(currentDestination);
+            //if (navAgent.destination != currentDestination)
+            //{
+            //    // Unity NavMesh SetDestination() doesn't always work for some reason so we do this
+            //    Debug.Log($"{gameObject.name} {currentDestination} {navAgent.destination} {currentAction}");
+            //    //navAgent.SetDestination(currentDestination);
+            //}
 
             if (currentAction.AreConditionsMet())
             {
@@ -119,7 +123,9 @@ namespace EcosystemSimulation
             if (GrowthProgress != 1)
             {
                 GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick);
-                gameObject.transform.localScale = size * GrowthProgress;
+                
+                gameObject.transform.localScale = new Vector3(animalStats.Size, animalStats.Size, animalStats.Size) * GrowthProgress;
+                navAgent.speed = animalStats.MovementSpeed * GrowthProgress;
             }
 
             if (Nourishment == 0)
@@ -132,17 +138,7 @@ namespace EcosystemSimulation
                 Destroy(gameObject);
         }
 
-        //private void LateUpdate()
-        //{
-        //    if (NeedsAction)
-        //    {
-        //        Debug.Log("Needs action  " + animalObject.name);
-        //        currentAction = GetNextAction();
-        //        currentDestination = currentAction.actionDestination;
-        //    }
-        //}
-
-        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, float growthProgress, GenderHandler gender)
+        public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, float growthProgress, GenderHandler gender, Color colour)
         {
             currentPriority = Priority.None;
             currentAction = null;
@@ -150,14 +146,41 @@ namespace EcosystemSimulation
             this.animalObject = animalObject;
             fov = new FieldOfView();
 
+            Renderer renderer = gameObject.Child().GetComponent<Renderer>();
+            renderer.material.color = colour;
+
             nourishment = baseHunger;
             hydration = baseThirst;
-            movementSpeed = baseSpeed;
-            lineOfSightRadius = baseSightRadius;
+            animalStats = new AnimalStats(gameObject.transform.lossyScale.x, baseSpeed, baseSightRadius, colour); // can take any value of scale
             currentDestination = animalObject.transform.position;
-            size = gameObject.transform.lossyScale;
+            animalStats.Size = gameObject.transform.lossyScale.x;      
             GrowthProgress = growthProgress;
+            navAgent.speed = GrowthProgress * animalStats.MovementSpeed;
+            genes = new Genes(animalStats);
 
+            genderHandler = gender;
+        }
+
+        public void Init(GameObject animalObject, float baseHunger, float baseThirst, AnimalStats stats, float growthProgress, GenderHandler gender)
+        {
+            currentPriority = Priority.None;
+            currentAction = null;
+
+            this.animalObject = animalObject;
+            fov = new FieldOfView();
+
+            Renderer renderer = gameObject.Child().GetComponent<Renderer>();
+            renderer.material.color = stats.Colour;
+
+            nourishment = baseHunger;
+            hydration = baseThirst;
+            animalStats = stats;
+            currentDestination = animalObject.transform.position;
+            animalStats.Size = gameObject.transform.lossyScale.x;
+            GrowthProgress = growthProgress;
+            navAgent.speed = GrowthProgress * animalStats.MovementSpeed;
+            genes = new Genes(animalStats);
+            Debug.Log($"{gameObject.name} stats {stats.MovementSpeed} animalStats {animalStats.MovementSpeed}");
             genderHandler = gender;
         }
 
@@ -192,8 +215,8 @@ namespace EcosystemSimulation
             do
             {
                 randomAngle = Random.Range(0, 360);
-                x = (Mathf.Cos(randomAngle) * lineOfSightRadius * 2) + position.x;
-                z = (Mathf.Sin(randomAngle) * lineOfSightRadius * 2) + position.z;
+                x = (Mathf.Cos(randomAngle) * animalStats.LineOfSightRadius * 2) + position.x;
+                z = (Mathf.Sin(randomAngle) * animalStats.LineOfSightRadius * 2) + position.z;
                 loopCap++;
             } while ((IsOutOfBounds(new Vector3(x, 0, z)) || IsInWater(new Vector3(x, 0, z))) && loopCap < 32);
             return new Vector3(x, 0, z);
@@ -201,18 +224,40 @@ namespace EcosystemSimulation
 
         private bool IsOutOfBounds(Vector3 position)
         {
-            return !Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5);  // Launches raycast from vector offset directly downward to find if is out of bounds
+            return MapHelper.Instance.IsOutOfBounds(position);
+            //return !Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5);  // Launches raycast from vector offset directly downward to find if is out of bounds
         }
 
         private bool IsInWater(Vector3 position)
         {
-            return Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5, fov.WaterLayerMask);  // Launches raycast from vector offset directly downward to find if is out of bounds
+            return MapHelper.Instance.IsInWater(position);
+            //return Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5, fov.WaterLayerMask);  // Launches raycast from vector offset directly downward to find if is out of bounds
         }
 
         protected abstract Priority GetPriority();
-        protected abstract Vector3 GetNextDestination();
         protected abstract Action GetNextAction();
         protected abstract Animal GetMatingPartner();
+    }
+
+    public struct AnimalStats
+    {
+        public AnimalStats(float size, float movementSpeed, float lineOfSightRadius, Color colour)
+        {
+            this.size = size;
+            this.movementSpeed = movementSpeed;
+            this.lineOfSightRadius = lineOfSightRadius;
+            this.colour = colour;
+        }
+
+        public float Size { get { return size; } set { size = value; } }
+        public float MovementSpeed { get { return movementSpeed; } set { movementSpeed = value; } }
+        public float LineOfSightRadius { get { return lineOfSightRadius; } set { lineOfSightRadius = value; } }
+        public Color Colour { get { return colour; } set { colour = value; } }
+
+        private float size;
+        private float movementSpeed;
+        private float lineOfSightRadius;
+        private Color colour;
     }
 }
 

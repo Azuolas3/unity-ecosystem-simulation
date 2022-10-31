@@ -13,28 +13,23 @@ namespace EcosystemSimulation
             this.performer = actionPerformer;
             this.food = food;
             actionDestination = destination;
-            food.Eaters.Add(performer);
-            //Debug.Log("CIA" + food);
+            food.Eaters.Add(performer);         
         }
 
         public override void Execute()
         {
-            //Debug.Log(food + " " + food.NutritionalValue);
-            performer.Nourishment += food.NutritionalValue;
-            if (performer.Nourishment > 100)
-                performer.Nourishment = 100;
-            //Debug.Log(performer.animalObject.name + " " + food);
-            food.Eat();
+            float result = performer.Nourishment + food.NutritionalValue;
+            performer.Nourishment = Mathf.Min(100, result);            
+            food.Consume();
             OnComplete();
         }
 
         public override void OnComplete()
         {
-            //performer.currentAction = null;
             foreach(Animal animal in food.Eaters)
             {
-                //if(animal.currentAction != null) //have to check if its null cause there's a chance its the second time the animal's current action is being removed
-                animal.currentAction.Cancel();
+                if(animal.currentAction != null) //since there can be animals on this list that had their action cancelled/changed due to other factors, we have to                               
+                    animal.currentAction.Cancel(); // check for null
                 Debug.Log(animal.gameObject.name + " Cancelled");
                 //food.Eaters.Remove(animal);
             }

@@ -18,7 +18,7 @@ namespace EcosystemSimulation
 
         public override void Execute()
         {
-            matingPartner.genderHandler.HandleMating();
+            matingPartner.genderHandler.HandleMating(matingPartner.genes);
             Debug.Log($"Mated {matingPartner.gameObject.name}");
             OnComplete();
         }

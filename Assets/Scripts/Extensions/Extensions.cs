@@ -10,5 +10,10 @@ namespace EcosystemSimulation
         {
             return gameObject.transform.position;
         }
+
+        public static GameObject Child(this GameObject gameObject, int index = 0) // dumb extension to prevent writing .transform.GetChild(0).gameObject all the time
+        {
+            return gameObject.transform.GetChild(index).gameObject;
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace EcosystemSimulation
 {
     public interface IEatable
     {
-        void Eat();
+        void Consume();
 
         int NutritionalValue { get; }
         List<Animal> Eaters { get; set; }

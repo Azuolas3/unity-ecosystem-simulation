@@ -14,7 +14,7 @@ namespace EcosystemSimulation
 
         public static GenderHandler GetRandomGender(Animal animal)
         {
-            GenderHandler gender = Random.Range(0, 2) == 0 ? new MaleHandler(animal) : new FemaleHandler(animal, 5);
+            GenderHandler gender = Random.value >= 0.5f ? new MaleHandler(animal) : new FemaleHandler(animal, 5);
             return gender;
         }
 
@@ -25,7 +25,7 @@ namespace EcosystemSimulation
         }
 
         public abstract Action HandleReproductionPriority();
-        public abstract void HandleMating();
+        public abstract void HandleMating(Genes partnerGenes);
         public abstract bool IsAvailableForMating();
     }
 

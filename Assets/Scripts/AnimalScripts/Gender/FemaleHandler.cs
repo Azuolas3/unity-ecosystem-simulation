@@ -29,13 +29,32 @@ namespace EcosystemSimulation
                 return new MoveToAction(baseAnimal, baseAnimal.GetSearchDestination());
         }
 
-        public override void HandleMating()
+        public override void HandleMating(Genes fatherGenes)
         {
             baseAnimal.currentAction.Cancel();
             baseAnimal.currentPriority = Animal.Priority.None;
             hasMate = false;
             isPregnant = true;
-            baseAnimal.gameObject.AddComponent<Pregnancy>().CallPregnancyCouroutine(gestationPeriod);
+            CouroutineHelper.Instance.CallCouroutine(PregnancyCouroutine(gestationPeriod, fatherGenes));
+        }
+
+        void GiveBirth(GameObject gameObject, Genes fatherGenes)
+        {
+            GameObject childObject = Object.Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
+            Animal child = childObject.GetComponent<Animal>();
+
+
+            child.isGrownUp = false;
+            AnimalStats childGenes = baseAnimal.genes.GetInheritedGenes(fatherGenes, baseAnimal.genes);
+            child.Init(childObject, 20, 20, childGenes, 0.25f, GetRandomGender(child));
+            childObject.transform.SetParent(gameObject.transform.parent);
+            Debug.Log("poof");
+        }
+
+        IEnumerator PregnancyCouroutine(int gestationPeriod, Genes fatherGenes)
+        {
+            yield return new WaitForSeconds(gestationPeriod);
+            GiveBirth(baseAnimal.gameObject, fatherGenes);
         }
 
         public override bool IsAvailableForMating()

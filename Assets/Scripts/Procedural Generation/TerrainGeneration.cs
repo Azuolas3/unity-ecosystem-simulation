@@ -67,6 +67,7 @@ namespace EcosystemSimulation
             SetupCollider();
 
             occupiedTilesMap = new bool[width, length];
+            new MapHelper(length - 1, width - 1, terrainMap); // Passing dimensions subtracted by one since that is the actual size of the map
 
             floraGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
             floraGenerator.GenerateTrees();
@@ -141,7 +142,7 @@ namespace EcosystemSimulation
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater))
+                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && IsNeighbouringLand(x, y))
                     {
                         GameObject temp = InstantiateWaterCollider(x, y);
                         temp.transform.SetParent(waterColliderObject.transform);

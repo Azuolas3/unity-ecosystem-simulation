@@ -18,7 +18,7 @@ namespace EcosystemSimulation
 
 
             child.isGrownUp = false;
-            child.Init(childObject, 20, 20, 20, 5, 0, GenderHandler.GetRandomGender(child));
+            child.Init(childObject, 20, 20, 3, 10, 0.25f, GenderHandler.GetRandomGender(child), Color.grey);
             childObject.transform.SetParent(gameObject.transform.parent);
             Debug.Log("poof");
         }
