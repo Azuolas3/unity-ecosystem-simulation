@@ -32,8 +32,9 @@ namespace EcosystemSimulation
 
         public override void HandleMating(Genes fatherGenes)
         {
-            Debug.Log($"{baseAnimal.gameObject.name}");
-            baseAnimal.currentAction.Cancel();
+            Debug.Log($"{baseAnimal.gameObject.name} {baseAnimal.currentAction}");
+            if(baseAnimal.currentAction != null)
+                baseAnimal.currentAction.Cancel();
             baseAnimal.currentPriority = Animal.Priority.None;
             hasMate = false;
             isPregnant = true;
@@ -46,7 +47,6 @@ namespace EcosystemSimulation
             Animal child = childObject.GetComponent<Animal>();
 
 
-            child.isGrownUp = false;
             AnimalStats childGenes = baseAnimal.genes.GetInheritedGenes(fatherGenes, baseAnimal.genes);
             child.Init(childObject, 20, 20, childGenes, 0.25f, GetRandomGender(child));
             childObject.transform.SetParent(gameObject.transform.parent);
@@ -56,12 +56,13 @@ namespace EcosystemSimulation
         IEnumerator PregnancyCouroutine(int gestationPeriod, Genes fatherGenes)
         {
             yield return new WaitForSeconds(gestationPeriod);
-            GiveBirth(baseAnimal.gameObject, fatherGenes);
+            if(baseAnimal != null) //Checking if the female isn't null to make sure its alive (hasn't been eaten after couroutine start and etc.)
+                GiveBirth(baseAnimal.gameObject, fatherGenes);
         }
 
         public override bool IsAvailableForMating()
         {
-            return !isPregnant && baseAnimal.isGrownUp;
+            return !isPregnant && baseAnimal.IsGrownUp;
         }
     }
 }

@@ -49,7 +49,7 @@ namespace EcosystemSimulation
 
         public override bool IsAvailableForMating()
         {
-            return baseAnimal.isGrownUp;
+            return baseAnimal.IsGrownUp;
         }
     }
 }

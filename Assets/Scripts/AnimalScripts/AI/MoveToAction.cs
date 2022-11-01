@@ -6,11 +6,14 @@ namespace EcosystemSimulation
 {
     public class MoveToAction : Action
     {
+        public override Vector3 ActionDestination { get { return destination; } }
+
+        private Vector3 destination;
 
         public MoveToAction(Animal actionPerformer, Vector3 destination)
         {
             performer = actionPerformer;
-            actionDestination = destination;
+            this.destination = destination;
         }
 
 
@@ -33,7 +36,7 @@ namespace EcosystemSimulation
 
         public override bool AreConditionsMet()
         {
-            return (Vector3.Distance(performer.gameObject.Position(), actionDestination) < 0.7f);
+            return (Vector3.Distance(performer.gameObject.Position(), ActionDestination) < 0.7f);
         }
     }
 }

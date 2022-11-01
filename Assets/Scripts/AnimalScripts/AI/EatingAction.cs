@@ -6,13 +6,16 @@ namespace EcosystemSimulation
 {
     public class EatingAction : Action
     {
-        private IEatable food;
+        public override Vector3 ActionDestination { get { return foodObject.Position(); } }
 
-        public EatingAction(Animal actionPerformer, IEatable food, Vector3 destination)
+        private IEatable food;
+        private GameObject foodObject;
+
+        public EatingAction(Animal actionPerformer, IEatable food, GameObject foodObject)
         {
             this.performer = actionPerformer;
             this.food = food;
-            actionDestination = destination;
+            this.foodObject = foodObject;
             Debug.Log(actionPerformer.name + food.Eaters + food);
             Debug.Log(performer);
             food.Eaters.Add(performer);         
@@ -32,7 +35,7 @@ namespace EcosystemSimulation
             {
                 if(animal.currentAction != null) //since there can be animals on this list that had their action cancelled/changed due to other factors, we have to                               
                     animal.currentAction.Cancel(); // check for null
-                Debug.Log(animal.gameObject.name + " Cancelled");
+                //Debug.Log(animal.gameObject.name + " Cancelled");
                 //food.Eaters.Remove(animal);
             }
         }
@@ -45,8 +48,7 @@ namespace EcosystemSimulation
 
         public override bool AreConditionsMet()
         {
-            return Mathf.Abs(performer.gameObject.Position().x - actionDestination.x) < 0.3f && //Doing this with Abs instead of Vector3.Distance for performance
-                Mathf.Abs(performer.gameObject.Position().z - actionDestination.z) < 0.3f;
+            return performer.gameObject.Position().IsClose(ActionDestination, 1f);
         }
     }
 }

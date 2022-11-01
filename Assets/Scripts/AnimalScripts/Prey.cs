@@ -6,7 +6,7 @@ namespace EcosystemSimulation
 {
     public class Prey : Animal, IEatable
     {
-        private List<Animal> eaters = new List<Animal>();
+        private List<Animal> eaters;
 
         public List<Animal> Eaters 
         { 
@@ -16,12 +16,24 @@ namespace EcosystemSimulation
 
         public int NutritionalValue { get { return (int)(animalStats.Size * 30); } }
 
+        private bool isRunningAway;
+
+        void Awake()
+        {
+             eaters = new List<Animal>();
+        }
+
         protected override Priority GetPriority()
         {
             //Collider[] predatorColliders = fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask);
             
             if(PredatorColliders.Length != 0)
             {
+                if (!isRunningAway && currentAction != null)
+                {
+                    currentAction.Cancel();
+                    isRunningAway = true;
+                }
                 return Priority.RunAway;
             }
             //else if(currentPriority != Priority.None)
@@ -30,6 +42,9 @@ namespace EcosystemSimulation
             //}
             else
             {
+                if (isRunningAway)
+                    isRunningAway = false;
+
                 if (ReproductionUrge > 70 && Nourishment > 50 && Hydration > 50 && genderHandler.IsAvailableForMating())
                 {
                     Debug.Log("NORO YRA");
@@ -54,8 +69,8 @@ namespace EcosystemSimulation
                     {
                         Collider collider = FindNearestCollider(PlantColliders);
                         Vector3 destination =  collider.gameObject.transform.position;
-                        Debug.Log($"{collider} {destination}");
-                        return new EatingAction(this, collider.GetComponent<IEatable>(), destination);
+                        Debug.Log($"{collider} {collider.gameObject.name} {destination}");
+                        return new EatingAction(this, collider.GetComponent<IEatable>(), collider.gameObject);
                     }
                     else
                     {
@@ -76,6 +91,17 @@ namespace EcosystemSimulation
 
                 case Priority.Reproduce:
                     return genderHandler.HandleReproductionPriority(() => PreyColliders);
+                case Priority.RunAway:
+                    Collider predator = FindNearestCollider(PredatorColliders);
+                    Vector3 runningAwayDestination = GetRunningAwayDestination(predator);
+                    if(!Equals(runningAwayDestination, gameObject.Position()))
+                    {
+                        return new MoveToAction(this, runningAwayDestination);
+                    }
+                    else
+                    {
+                        return new WaitingAction(this, 2);
+                    }
                 default:
                     return new SearchAction(this, () => PlantColliders, GetSearchDestination()); ;
 

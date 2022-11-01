@@ -40,7 +40,7 @@ namespace EcosystemSimulation
 
         public float GrowthProgress { get; set; }
         [SerializeField]
-        public bool isGrownUp = true;
+        public bool IsGrownUp { get { return GrowthProgress == 1; } }
 
         public GenderHandler genderHandler;
 
@@ -87,7 +87,7 @@ namespace EcosystemSimulation
         {
             Health = 100;
             gendertest = genderHandler.Gender;
-            navAgent.autoRepath = false;
+            //navAgent.autoRepath = false;
         }
 
         public void Update()
@@ -97,15 +97,30 @@ namespace EcosystemSimulation
             if (NeedsAction)
             {
                 currentAction = GetNextAction();
-                //Debug.Log("Needs action  " + animalObject.name + currentAction + currentAction.actionDestination);
-                currentDestination = currentAction.actionDestination;
+                Debug.Log("Needs action  " + animalObject.name + currentAction + currentAction.ActionDestination);
+                currentDestination = currentAction.ActionDestination;
+
+                if (!navAgent.SetDestination(currentDestination))
+                    Debug.Log("bad");
+            }
+
+            //Debug.Log($"current action {gameObject.name} {currentAction}  current ActioNDestination{currentAction.ActionDestination}");
+            //if (Time.frameCount % 30 == 0)
+            //{
+            //    navAgent.SetDestination(currentAction.ActionDestination);
+
+            //}
+
+            if (currentDestination.IsFar(currentAction.ActionDestination, 1f))
+            {
+                currentDestination = currentAction.ActionDestination;
                 navAgent.SetDestination(currentDestination);
             }
 
-            //if (navAgent.destination != currentDestination)
+            //if (navAgent.destination.x != currentDestination.x || navAgent.destination.z != currentDestination.z) //checking specifically x and z since
             //{
-            //    // Unity NavMesh SetDestination() doesn't always work for some reason so we do this
-            //    Debug.Log($"{gameObject.name} {currentDestination} {navAgent.destination} {currentAction}");
+            //    //Debug.Log($"Changed {gameObject.name} {Mathf.RoundToInt(currentDestination.x)} { Mathf.RoundToInt(currentDestination.z)} {Mathf.RoundToInt(navAgent.destination.x)} {Mathf.RoundToInt(navAgent.destination.z)} {navAgent.destination.x != currentDestination.x || navAgent.destination.z != currentDestination.z} {currentAction}");
+            //    Debug.Log($"Changed {gameObject.name} {currentDestination} {navAgent.destination} {currentAction}");
             //    //navAgent.SetDestination(currentDestination);
             //}
 
@@ -220,6 +235,49 @@ namespace EcosystemSimulation
                 loopCap++;
             } while ((IsOutOfBounds(new Vector3(x, 0, z)) || IsInWater(new Vector3(x, 0, z))) && loopCap < 32);
             return new Vector3(x, 0, z);
+        }
+
+        protected Vector3 GetRunningAwayDestination(Collider predator)
+        {
+            Vector3 position = gameObject.Position();
+            float randomAngle;
+
+            float x;
+            float z;
+
+            Vector3 direction = position - predator.gameObject.Position();
+            Vector3 destination = position + (direction * 2);
+
+            if (IsOutOfBounds(destination) || IsInWater(destination))
+            {
+                destination = Quaternion.AngleAxis(90, Vector3.up) * destination;
+                if (IsOutOfBounds(destination) || IsInWater(destination))
+                {
+                    destination = Quaternion.AngleAxis(-90, Vector3.up) * destination;
+                    if(IsOutOfBounds(destination) || IsInWater(destination))
+                        return gameObject.Position();
+                }
+            }
+            //do
+            //{
+            //    float xMove = Mathf.Cos(angle);
+            //    float yMove = Mathf.Sin(angle);
+            //    Vector3 dir = new Vector3(xMove, 0, yMove).normalized;
+            //    dir = Quaternion.AngleAxis(gameObject.transform.eulerAngles.y, Vector3.up) * dir;
+            //    destination = end + (dir * distance);
+            //    angle += increment;
+            //} while (IsOutOfBounds(destination) || IsInWater(destination));
+            return destination;
+
+            //int loopCap = 0;
+            //do
+            //{
+            //    randomAngle = Random.Range(0, 360);
+            //    x = (Mathf.Cos(randomAngle) * animalStats.LineOfSightRadius * 2) + position.x;
+            //    z = (Mathf.Sin(randomAngle) * animalStats.LineOfSightRadius * 2) + position.z;
+            //    loopCap++;
+            //} while ((IsOutOfBounds(new Vector3(x, 0, z)) || IsInWater(new Vector3(x, 0, z))) && loopCap < 32);
+            //return new Vector3(x, 0, z);
         }
 
         private bool IsOutOfBounds(Vector3 position)

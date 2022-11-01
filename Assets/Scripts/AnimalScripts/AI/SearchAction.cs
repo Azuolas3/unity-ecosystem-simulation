@@ -7,12 +7,15 @@ namespace EcosystemSimulation
 {
     public class SearchAction : Action
     {
+        public override Vector3 ActionDestination { get { return destination; } }
+
+        private Vector3 destination;
         private Func<Collider[]> getColliders;
 
         public SearchAction(Animal actionPerformer, Func<Collider[]> getColliders, Vector3 destination)
         {
             this.performer = actionPerformer;
-            actionDestination = destination;
+            this.destination = destination;
             this.getColliders = getColliders;
         }
 
@@ -37,8 +40,8 @@ namespace EcosystemSimulation
         public override bool AreConditionsMet()
         {
             return (getColliders().Length != 0 || (
-                Mathf.Abs(performer.gameObject.Position().x - actionDestination.x) < 0.7f && //Doing this with Abs instead of Vector3.Distance for performance
-               Mathf.Abs(performer.gameObject.Position().z - actionDestination.z) < 0.7f));
+                Mathf.Abs(performer.gameObject.Position().x - ActionDestination.x) < 0.7f && //Doing this with Abs instead of Vector3.Distance for performance
+               Mathf.Abs(performer.gameObject.Position().z - ActionDestination.z) < 0.7f));
         }
     }
 }

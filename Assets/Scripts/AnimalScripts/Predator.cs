@@ -34,7 +34,7 @@ namespace EcosystemSimulation
                         Vector3 destination = collider.gameObject.transform.position;
                         Debug.Log($"{gameObject.name} {collider} {destination}");
                         IEatable prey = collider.GetComponent<IEatable>();
-                        return new EatingAction(this, prey, destination);
+                        return new EatingAction(this, prey, collider.gameObject);
                     }
                     else
                     {

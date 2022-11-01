@@ -75,8 +75,8 @@ namespace EcosystemSimulation
 
             faunaGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
             faunaGenerator.GeneratePreyFauna();
-            navMeshSurface.BuildNavMesh();
             faunaGenerator.GeneratePredatorFauna();
+            navMeshSurface.BuildNavMesh();
         }
 
         public TerrainName[,] GenerateTerrainMap(float[,] noiseMap)
@@ -142,7 +142,7 @@ namespace EcosystemSimulation
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && IsNeighbouringLand(x, y))
+                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && terrainMap[x, y] == TerrainName.ShallowWater)
                     {
                         GameObject temp = InstantiateWaterCollider(x, y);
                         temp.transform.SetParent(waterColliderObject.transform);
@@ -179,7 +179,7 @@ namespace EcosystemSimulation
 
             NavMeshObstacle obstacleComponent = obj.AddComponent<NavMeshObstacle>();
             obstacleComponent.carving = true;
-            obstacleComponent.size = size - new Vector3(0.9f, 0, 0.9f); // cutting down size of navObstacle to let animal get close to it
+            obstacleComponent.size = size - new Vector3(0.92f, 0, 0.92f); // cutting down size of navObstacle to let animal get close to it
             return obj;
         }
 

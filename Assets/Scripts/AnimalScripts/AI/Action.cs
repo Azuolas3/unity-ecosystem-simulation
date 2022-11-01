@@ -7,7 +7,7 @@ namespace EcosystemSimulation
     public abstract class Action
     {
         public Animal performer; //object which performs the action
-        public Vector3 actionDestination;
+        public abstract Vector3 ActionDestination { get; }
 
         public abstract void Execute();
         public abstract void OnComplete();

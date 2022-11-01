@@ -7,12 +7,12 @@ namespace EcosystemSimulation
     public class MatingAction : Action
     {
         private Animal matingPartner;
+        public override Vector3 ActionDestination { get { return matingPartner.gameObject.Position(); } }
 
         public MatingAction(Animal actionPerformer, Animal matingPartner)
         {
             performer = actionPerformer;
             this.matingPartner = matingPartner;
-            actionDestination = matingPartner.gameObject.Position();
             Debug.Log("hot time " + performer.name + " " + matingPartner.name + " " + matingPartner.currentAction);
         }
 
@@ -36,9 +36,8 @@ namespace EcosystemSimulation
         }
 
         public override bool AreConditionsMet()
-        {            
-            return Mathf.Abs(performer.gameObject.Position().x - matingPartner.gameObject.Position().x) < 0.7f && //Doing this with Abs instead of Vector3.Distance for performance
-               Mathf.Abs(performer.gameObject.Position().z - matingPartner.gameObject.Position().z) < 0.7f;
+        {
+            return performer.gameObject.Position().IsClose(matingPartner.gameObject.Position(), 1);
         }
     }
 }

@@ -17,7 +17,6 @@ namespace EcosystemSimulation
             Animal child = childObject.GetComponent<Animal>();
 
 
-            child.isGrownUp = false;
             child.Init(childObject, 20, 20, 3, 10, 0.25f, GenderHandler.GetRandomGender(child), Color.grey);
             childObject.transform.SetParent(gameObject.transform.parent);
             Debug.Log("poof");

@@ -15,5 +15,17 @@ namespace EcosystemSimulation
         {
             return gameObject.transform.GetChild(index).gameObject;
         }
+
+        public static bool IsClose(this Vector3 position, Vector3 destination, float distance) // a more performant (though less accurate) version of Vector3.Distance()
+        {
+            return Mathf.Abs(position.x - destination.x) < distance && //Doing this with Abs instead of Vector3.Distance for performance
+               Mathf.Abs(position.z - destination.z) < distance;
+        }
+
+        public static bool IsFar(this Vector3 position, Vector3 destination, float distance) // a more performant (though less accurate) version of Vector3.Distance()
+        {
+            return Mathf.Abs(position.x - destination.x) > distance && //Doing this with Abs instead of Vector3.Distance for performance
+               Mathf.Abs(position.z - destination.z) > distance;
+        }
     }
 }

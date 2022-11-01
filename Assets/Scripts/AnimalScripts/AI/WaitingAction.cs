@@ -8,7 +8,7 @@ namespace EcosystemSimulation
 {
     public class WaitingAction : Action
     {
-        Timer timer;
+        public override Vector3 ActionDestination { get { return performer.gameObject.Position(); } }
 
         bool isCountdownOver = false;
         int duration;
@@ -16,20 +16,9 @@ namespace EcosystemSimulation
         public WaitingAction(Animal actionPerformer, int duration)
         {
             this.performer = actionPerformer;
-            actionDestination = actionPerformer.gameObject.Position();
-
             this.duration = duration;
+
             CouroutineHelper.Instance.CallCouroutine(WaitSeconds(duration));
-            //timer = new Timer(duration * 1000);
-            //timer.Elapsed += OnTimedEvent;
-            //timer.Enabled = true;
-
-        }
-
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-            isCountdownOver = true;
-            timer.Enabled = false;
         }
 
         IEnumerator WaitSeconds(int duration)
@@ -46,7 +35,6 @@ namespace EcosystemSimulation
         public override void OnComplete()
         {
             Debug.Log("Timer completed");
-            //timer.Enabled = false;
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }
@@ -54,7 +42,6 @@ namespace EcosystemSimulation
         public override void Cancel()
         {
             Debug.Log("Timer cancelled");
-            //timer.Enabled = false;
             CouroutineHelper.Instance.StopCouroutine(WaitSeconds(duration));
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
