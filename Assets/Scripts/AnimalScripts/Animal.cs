@@ -140,7 +140,7 @@ namespace EcosystemSimulation
                 GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick);
                 
                 gameObject.transform.localScale = new Vector3(animalStats.Size, animalStats.Size, animalStats.Size) * GrowthProgress;
-                navAgent.speed = animalStats.MovementSpeed * GrowthProgress;
+                navAgent.speed = (animalStats.MovementSpeed / animalStats.Size) * GrowthProgress;
             }
 
             if (Nourishment == 0)
@@ -170,7 +170,7 @@ namespace EcosystemSimulation
             currentDestination = animalObject.transform.position;
             animalStats.Size = gameObject.transform.lossyScale.x;      
             GrowthProgress = growthProgress;
-            navAgent.speed = GrowthProgress * animalStats.MovementSpeed;
+            navAgent.speed = GrowthProgress * (animalStats.MovementSpeed / animalStats.Size);
             genes = new Genes(animalStats);
 
             genderHandler = gender;

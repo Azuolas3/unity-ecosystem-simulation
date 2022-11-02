@@ -28,7 +28,7 @@ namespace EcosystemSimulation
 
         public void GenerateTrees()
         {
-            instantiatedFlora = new GameObject();
+            instantiatedFlora = new GameObject("Instantiated Flora");
             System.Random pseudoRNG = new System.Random(seed);
 
             for (int y = 0; y < length - 1; y++)

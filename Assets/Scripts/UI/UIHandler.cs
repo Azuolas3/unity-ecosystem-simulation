@@ -22,7 +22,7 @@ namespace EcosystemSimulation
         int seed;
         void Start()
         {
-            //terrainGenerator = simulationController.terrainGenerator;
+            //Time.timeScale = 2f;
             inputField.onEndEdit.AddListener(ChangeListener);
             button.onClick.AddListener(OnClickGenerate);
         }
