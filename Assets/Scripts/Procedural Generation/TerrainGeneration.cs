@@ -55,6 +55,9 @@ namespace EcosystemSimulation
         TextureGenerator textureGenerator = new TextureGenerator();
         Texture2D mapTexture;
 
+        [SerializeField]
+        private bool spawnPredators;
+
         public void GenerateTerrain()
         {
             Noise noiseGenerator = new Noise();
@@ -66,17 +69,23 @@ namespace EcosystemSimulation
 
             SetupCollider();
 
-            occupiedTilesMap = new bool[width, length];
-            new MapHelper(length - 1, width - 1, terrainMap); // Passing dimensions subtracted by one since that is the actual size of the map
+            occupiedTilesMap = new bool[width, length];            
 
             floraGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
             floraGenerator.GenerateTrees();
+
+            bool[,] occupiedTilesMapCopy = (bool[,])occupiedTilesMap.Clone();
+            new MapHelper(length - 1, width - 1, terrainMap, occupiedTilesMap); // Passing dimensions subtracted by one since that is the actual size of the map
             floraGenerator.GeneratePlants();
+            
 
             faunaGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
             faunaGenerator.GeneratePreyFauna();
-            //faunaGenerator.GeneratePredatorFauna();
+           
+            if(spawnPredators)
+                faunaGenerator.GeneratePredatorFauna();
             navMeshSurface.BuildNavMesh();
+            InstantiateInvisibleWalls();
         }
 
         public TerrainName[,] GenerateTerrainMap(float[,] noiseMap)
@@ -142,7 +151,7 @@ namespace EcosystemSimulation
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && terrainMap[x, y] == TerrainName.ShallowWater)
+                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && IsNeighbouringLand(x, y))
                     {
                         GameObject temp = InstantiateWaterCollider(x, y);
                         temp.transform.SetParent(waterColliderObject.transform);
@@ -150,20 +159,6 @@ namespace EcosystemSimulation
                     }
                 }
             }
-        }
-
-        private bool IsNeighbouringLand(int x, int y)
-        {
-            int[] offsets = { 1, -1 };
-            for(int i = 0; i < 2; i++)
-            {
-                if (x + offsets[i] < width && x + offsets[i] >= 0 && terrainMap[x + offsets[i], y] == TerrainName.Sand)
-                    return true;
-                if (y + offsets[i] < length && y + offsets[i] >= 0 && terrainMap[x, y + offsets[i]] == TerrainName.Sand)
-                    return true;
-            }
-
-            return false;
         }
 
         private GameObject InstantiateWaterCollider(int x, int y)
@@ -183,6 +178,39 @@ namespace EcosystemSimulation
             return obj;
         }
 
+        private void InstantiateInvisibleWalls()
+        {
+            GameObject wallColliderObject = new GameObject("Wall Collider");
+            Vector3 position;
+
+            GameObject firstWall = new GameObject();
+            BoxCollider collider = firstWall.AddComponent<BoxCollider>();
+            collider.transform.position = new Vector3(width / 2, 30, 0);
+            collider.size = new Vector3(width, 60, 1);
+            firstWall.transform.SetParent(wallColliderObject.transform);
+
+            position = firstWall.Position() + new Vector3(0, 0, length);
+            GameObject secondWall = Instantiate(firstWall, position, Quaternion.identity);
+            secondWall.transform.SetParent(wallColliderObject.transform);
+
+
+            GameObject thirdWall = new GameObject();
+            collider = thirdWall.AddComponent<BoxCollider>();
+            collider.transform.position = new Vector3(0, 30, length / 2);
+            collider.size = new Vector3(1, 60, length);
+            thirdWall.transform.SetParent(wallColliderObject.transform);
+
+            position = thirdWall.Position() + new Vector3(width, 0, 0);
+            GameObject fourthWall = Instantiate(thirdWall, position, Quaternion.identity);
+            fourthWall.transform.SetParent(wallColliderObject.transform);
+
+            GameObject ceiling = new GameObject();
+            collider = ceiling.AddComponent<BoxCollider>();
+            collider.transform.position = new Vector3(width / 2, 60, length / 2);
+            collider.size = new Vector3(width, 1, length);
+            ceiling.transform.SetParent(wallColliderObject.transform);
+        }
+
         public void DrawMesh(MeshData meshData, Texture2D texture)
         {
             Mesh mesh = meshData.CreateMesh();
@@ -193,6 +221,20 @@ namespace EcosystemSimulation
         public void ChangeColor(GameObject gameObject, Color color)
         {
             gameObject.GetComponent<Renderer>().material.color = color;
+        }
+
+        private bool IsNeighbouringLand(int x, int y)
+        {
+            int[] offsets = { 1, -1 };
+            for (int i = 0; i < 2; i++)
+            {
+                if (x + offsets[i] < width && x + offsets[i] >= 0 && terrainMap[x + offsets[i], y] == TerrainName.Sand)
+                    return true;
+                if (y + offsets[i] < length && y + offsets[i] >= 0 && terrainMap[x, y + offsets[i]] == TerrainName.Sand)
+                    return true;
+            }
+
+            return false;
         }
     }
 

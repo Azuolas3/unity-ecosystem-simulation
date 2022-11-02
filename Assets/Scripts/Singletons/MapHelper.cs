@@ -13,13 +13,20 @@ namespace EcosystemSimulation
         int mapLength;
         int mapWidth;
         TerrainName[,] terrainMap;
+        bool[,] occupiedTiles;
 
-        public MapHelper(int length, int width, TerrainName[,] terrain)
+        public MapHelper(int length, int width, TerrainName[,] terrain, bool[,] occupiedTilesMap)
         {
             instance = this;
             mapLength = length;
             mapWidth = width;
             terrainMap = terrain;
+            occupiedTiles = occupiedTilesMap;
+        }
+
+        public bool IsInaccessible(Vector3 point)
+        {
+            return (IsInWater(point) || IsOutOfBounds(point));
         }
 
         public bool IsOutOfBounds(Vector3 point)
@@ -38,7 +45,18 @@ namespace EcosystemSimulation
             float x = point.x;
             float z = point.z;
 
-            if (terrainMap[(int)x, (int)z] == TerrainName.DeepWater || terrainMap[(int)x, (int)z] == TerrainName.ShallowWater)
+            if (!IsOutOfBounds(point) && (terrainMap[(int)x, (int)z] == TerrainName.DeepWater || terrainMap[(int)x, (int)z] == TerrainName.ShallowWater))
+                return true;
+            else
+                return false;
+        }
+
+        public bool IsInTree(Vector3 point)
+        {
+            int x = (int)point.x;
+            int z = (int)point.z;
+
+            if (!IsOutOfBounds(point) && occupiedTiles[x, z] == true)
                 return true;
             else
                 return false;

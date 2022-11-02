@@ -535,15 +535,16 @@ MonoBehaviour:
   noiseScale: 30
   octaves: 2
   persistence: 0.5
-  lacunarity: 1
+  lacunarity: 1.5
   treeDensity: 0
   plantDensity: 0
-  width: 60
+  width: 100
   length: 60
   navMeshSurface: {fileID: 36827615}
   mapCollider: {fileID: 1302744930}
   meshFilter: {fileID: 1302744926}
   meshRenderer: {fileID: 1302744925}
+  spawnPredators: 1
 --- !u!114 &676832268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,8 +617,9 @@ MonoBehaviour:
   - {r: 0.9607843, g: 0.95686275, b: 0.9490196, a: 0.39215687}
   - {r: 0.65882355, g: 0.6666667, b: 0.654902, a: 0.39215687}
   - {r: 0.05882353, g: 0.05882353, b: 0.05882353, a: 0.39215687}
-  predatorDensity: 0.007
-  preyDensity: 30
+  predatorDensity: 0.005
+  preyDensity: 20
+  spawnOne: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,7 +895,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 10, y: 10, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

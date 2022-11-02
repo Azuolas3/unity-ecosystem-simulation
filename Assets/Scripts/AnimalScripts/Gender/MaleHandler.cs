@@ -34,7 +34,7 @@ namespace EcosystemSimulation
                         Transform partnerTransform = matingAnimal.gameObject.transform;
                         //partnerTransform.rotation = Quaternion.Slerp(partnerTransform.rotation, rotationQuaternion, Time.deltaTime * 2);
                         //partnerTransform.LookAt(baseAnimal.gameObject.Position());
-                        CouroutineHelper.Instance.CallCouroutine(RotateToDirection(partnerTransform, baseAnimal.gameObject.Position(), 0.5f));
+                        baseAnimal.StartCoroutine(RotateToDirection(partnerTransform, baseAnimal.gameObject.Position(), 0.5f));
                         
                         return new MatingAction(baseAnimal, matingAnimal);
                     }

@@ -38,7 +38,8 @@ namespace EcosystemSimulation
             baseAnimal.currentPriority = Animal.Priority.None;
             hasMate = false;
             isPregnant = true;
-            CouroutineHelper.Instance.CallCouroutine(PregnancyCouroutine(gestationPeriod, fatherGenes));
+            baseAnimal.StartCoroutine(PregnancyCouroutine(gestationPeriod, fatherGenes));
+            //CouroutineHelper.Instance.CallCouroutine(PregnancyCouroutine(gestationPeriod, fatherGenes));
         }
 
         void GiveBirth(GameObject gameObject, Genes fatherGenes)

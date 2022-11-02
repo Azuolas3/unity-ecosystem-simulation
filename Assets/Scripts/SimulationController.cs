@@ -13,12 +13,6 @@ namespace EcosystemSimulation
 
             terrainGenerator.GenerateTerrain();
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
 }
 

@@ -30,6 +30,9 @@ namespace EcosystemSimulation
         private GameObject instantiatedFauna;
         private bool[,] occupiedTilesMap;
 
+        [SerializeField]
+        private bool spawnOne = false;
+
         public void GeneratePreyFauna()
         {
             instantiatedFauna = new GameObject("Instantiated fauna");
@@ -55,8 +58,8 @@ namespace EcosystemSimulation
 
                             occupiedTilesMap[x, y] = true;
                             preyCount++;
-                            //if (preyCount == 1)
-                            //    return;
+                            if (spawnOne && preyCount == 1)
+                                return;
                         }
                     }
                 }

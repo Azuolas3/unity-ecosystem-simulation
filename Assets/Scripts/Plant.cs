@@ -50,7 +50,7 @@ namespace EcosystemSimulation
             }
         }
 
-        public void Consume() // Contrary to name, this function is more like GetEaten().
+        public void Consume() // Contrary to name, this function is more like GetConsumed().
         {
             Destroy(gameObject);
             gameObject.GetComponent<Collider>().enabled = false; // disabling it manually after destroying since destroy is delayed until end of update(), which means another animal can queue action to eat it aswell.
@@ -67,10 +67,10 @@ namespace EcosystemSimulation
         {
             Vector3 offset = new Vector3(0.5f, 0, 0.5f);
 
-            if (Random.value < 0.5f)
+            if (Random.value < 0.7f)
                 offset.x *= -1;
 
-            if (Random.value < 0.5f)
+            if (Random.value < 0.7f)
                 offset.z *= -1;
 
             Vector3 plantPosition = gameObject.transform.position + offset;

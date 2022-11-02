@@ -13,10 +13,10 @@ namespace EcosystemSimulation
         public DrinkingAction(Animal actionPerformer, Vector3 destination)
         {
             performer = actionPerformer;
-            NavMeshHit hit;
+            //NavMeshHit hit;
             this.destination = destination;
-            NavMesh.SamplePosition(destination, out hit, 1.0f, NavMesh.AllAreas);
-            this.destination = hit.position;
+            //NavMesh.SamplePosition(destination, out hit, 1.0f, NavMesh.AllAreas);
+            //this.destination = hit.position;
         }
 
         public override void Execute()
