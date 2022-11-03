@@ -50,6 +50,11 @@ namespace EcosystemSimulation
         {
             return performer.gameObject.Position().IsClose(ActionDestination, 1f);
         }
+
+        public override string ToString()
+        {
+            return "eating";
+        }
     }
 }
 

@@ -43,5 +43,10 @@ namespace EcosystemSimulation
             return Mathf.Abs(performer.gameObject.Position().x - ActionDestination.x) < 0.7f && //Doing this with Abs instead of Vector3.Distance for performance
                Mathf.Abs(performer.gameObject.Position().z - ActionDestination.z) < 0.7f;
         }
+
+        public override string ToString()
+        {
+            return "drinking";
+        }
     }
 }

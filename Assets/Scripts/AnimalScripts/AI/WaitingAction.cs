@@ -51,5 +51,10 @@ namespace EcosystemSimulation
         {
             return isCountdownOver;
         }
+
+        public override string ToString()
+        {
+            return "waiting";
+        }
     }
 }

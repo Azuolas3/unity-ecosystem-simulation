@@ -38,5 +38,10 @@ namespace EcosystemSimulation
         {
             return (Vector3.Distance(performer.gameObject.Position(), ActionDestination) < 0.7f);
         }
+
+        public override string ToString()
+        {
+            return "moving";
+        }
     }
 }

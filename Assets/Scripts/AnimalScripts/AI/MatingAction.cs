@@ -39,6 +39,11 @@ namespace EcosystemSimulation
         {
             return performer.gameObject.Position().IsClose(matingPartner.gameObject.Position(), 1);
         }
+
+        public override string ToString()
+        {
+            return "mating";
+        }
     }
 }
 
