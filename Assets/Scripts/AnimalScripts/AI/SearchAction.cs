@@ -46,7 +46,24 @@ namespace EcosystemSimulation
 
         public override string ToString()
         {
-            return "searching";
+            string searchString;
+            switch(performer.currentPriority)
+            {
+                case Animal.Priority.FindFood:
+                    searchString = "for food";
+                    break;
+                case Animal.Priority.FindWater:
+                    searchString = "for water";
+                    break;
+                case Animal.Priority.Reproduce:
+                    searchString = "for mate";
+                    break;
+                default:
+                    searchString = "";
+                    break;
+
+            }
+            return $"searching {searchString}";
         }
     }
 }

@@ -41,7 +41,21 @@ namespace EcosystemSimulation
 
         public override string ToString()
         {
-            return "moving";
+            string moveString;
+            switch (performer.currentPriority)
+            {
+                case Animal.Priority.RunAway:
+                    moveString = "running away";
+                    break;
+                //case Animal.Priority.Reproduce:
+                //    moveString = "idling";
+                //    break;
+                default:
+                    moveString = "idling";
+                    break;
+
+            }
+            return moveString;
         }
     }
 }

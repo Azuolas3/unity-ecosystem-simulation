@@ -114,11 +114,13 @@ namespace EcosystemSimulation
         void UpdateAnimalInfoBar(Animal animal, TMP_Text textField)
         {
             Debug.Log(textField);
+            textField.alignment = TextAlignmentOptions.Center;
             string healthString = $"Health: {(int)animal.Health}";
+            string genderString = $"Gender: {animal.genderHandler.Gender}";
             string nourishmentString = $"Nourishment: {(int)animal.Nourishment}";
             string hydrationString = $"Hydration: {(int)animal.Hydration}";
             string actionString = $"Currently {animal.currentAction}";
-            textField.text = $"{healthString}\n{nourishmentString}\n{hydrationString}\n{actionString}";
+            textField.text = $"{healthString}   {genderString}\n{nourishmentString}\n{hydrationString}\n{actionString}";
         }
     }
 }
