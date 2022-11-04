@@ -41,13 +41,15 @@ namespace EcosystemSimulation
         private int length;
 
         [SerializeField]
-        public int mapSeed { get; set; }
+        public int mapSeed;
 
         public NavMeshSurface navMeshSurface;
 
         [SerializeField]
         private MeshCollider mapCollider;
         private GameObject waterColliderObject;
+        private GameObject wallColliderObject;
+
         private List<GameObject> waterColliderObjects = new List<GameObject>();
 
         public MeshFilter meshFilter;
@@ -58,37 +60,37 @@ namespace EcosystemSimulation
         [SerializeField]
         private bool spawnPredators;
 
-        public void GenerateTerrain()
+        public void GenerateTerrain(MapSettings map)
         {
             Noise noiseGenerator = new Noise();
-            float[,] noiseMap = noiseGenerator.GenerateNoiseMap(mapSeed, width, length, noiseScale, octaves, persistence, lacunarity, Vector2.zero);
-            terrainMap = GenerateTerrainMap(noiseMap);
+            float[,] noiseMap = noiseGenerator.GenerateNoiseMap(map.Seed, map.Width, map.Length, noiseScale, octaves, persistence, lacunarity, Vector2.zero);
+            terrainMap = GenerateTerrainMap(noiseMap, map.Width, map.Length);
 
-            mapTexture = GenerateTexture(width, length, noiseMap);
-            DrawMesh(MeshGenerator.GenerateMesh(width, length, noiseMap), mapTexture);
+            mapTexture = GenerateTexture(map.Width, map.Length, noiseMap);
+            DrawMesh(MeshGenerator.GenerateMesh(map.Width, map.Length, noiseMap), mapTexture);
 
-            SetupCollider();
+            SetupCollider(map.Width, map.Length);
 
-            occupiedTilesMap = new bool[width, length];            
+            occupiedTilesMap = new bool[map.Width, map.Length];            
 
-            floraGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
+            floraGenerator.Init(map.Seed, map.Width, map.Length, map.PlantDensity, map.TreeDensity, terrainMap, occupiedTilesMap);
             floraGenerator.GenerateTrees();
 
             bool[,] occupiedTilesMapCopy = (bool[,])occupiedTilesMap.Clone();
-            new MapHelper(length - 1, width - 1, terrainMap, occupiedTilesMap); // Passing dimensions subtracted by one since that is the actual size of the map
+            new MapHelper(map.Length - 1, map.Width - 1, terrainMap, occupiedTilesMap); // Passing dimensions subtracted by one since that is the actual size of the map
             floraGenerator.GeneratePlants();
             
 
-            faunaGenerator.Init(mapSeed, width, length, terrainMap, occupiedTilesMap);
+            faunaGenerator.Init(map.Seed, map.Width, map.Length, map.PreyDensity, map.PredatorDensity, terrainMap, occupiedTilesMap);
             faunaGenerator.GeneratePreyFauna();
            
             if(spawnPredators)
                 faunaGenerator.GeneratePredatorFauna();
             navMeshSurface.BuildNavMesh();
-            InstantiateInvisibleWalls();
+            InstantiateInvisibleWalls(map.Width, map.Length);
         }
 
-        public TerrainName[,] GenerateTerrainMap(float[,] noiseMap)
+        public TerrainName[,] GenerateTerrainMap(float[,] noiseMap, int width, int length)
         {
             TerrainName[,] terrainMap = new TerrainName[width, length];
             for (int y = 0; y < length; y++)
@@ -113,6 +115,7 @@ namespace EcosystemSimulation
         {
             Destroy(instantiatedObjects);
             Destroy(waterColliderObject);
+            Destroy(wallColliderObject);
             floraGenerator.ClearGeneratedFlora();
             faunaGenerator.ClearGeneratedFauna();
         }
@@ -138,20 +141,20 @@ namespace EcosystemSimulation
             return textureGenerator.TextureFromColourMap(colourMap, width, height);
         }
 
-        private void SetupCollider()
+        private void SetupCollider(int width, int length)
         {
             mapCollider.sharedMesh = meshFilter.sharedMesh;
-            SetupWaterCollider();
+            SetupWaterCollider(width, length);
         }
 
-        private void SetupWaterCollider()
+        private void SetupWaterCollider(int width, int length)
         {
             waterColliderObject = new GameObject("Water Collider");
             for (int y = 0; y < length; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && IsNeighbouringLand(x, y))
+                    if((terrainMap[x, y] == TerrainName.DeepWater || terrainMap[x, y] == TerrainName.ShallowWater) && IsNeighbouringLand(x, y, width, length))
                     {
                         GameObject temp = InstantiateWaterCollider(x, y);
                         temp.transform.SetParent(waterColliderObject.transform);
@@ -178,9 +181,9 @@ namespace EcosystemSimulation
             return obj;
         }
 
-        private void InstantiateInvisibleWalls()
+        private void InstantiateInvisibleWalls(int width, int length)
         {
-            GameObject wallColliderObject = new GameObject("Wall Collider");
+            wallColliderObject = new GameObject("Wall Collider");
             Vector3 position;
 
             GameObject firstWall = new GameObject();
@@ -223,7 +226,7 @@ namespace EcosystemSimulation
             gameObject.GetComponent<Renderer>().material.color = color;
         }
 
-        private bool IsNeighbouringLand(int x, int y)
+        private bool IsNeighbouringLand(int x, int y, int width, int length)
         {
             int[] offsets = { 1, -1 };
             for (int i = 0; i < 2; i++)
@@ -236,6 +239,30 @@ namespace EcosystemSimulation
 
             return false;
         }
+    }
+
+    public struct MapSettings
+    {
+        public MapSettings(int seed, int width, int length, float prey, float predator, float plant, float tree)
+        {
+            Seed = seed;
+            Width = width;
+            Length = length;
+
+            PreyDensity = prey;
+            PredatorDensity = predator;
+            PlantDensity = plant;
+            TreeDensity = tree;
+        }
+
+        public int Seed { get; private set; }
+        public int Width { get; private set; }
+        public int Length { get; private set; }
+        
+        public float PreyDensity { get; private set; }
+        public float PredatorDensity { get; private set; }
+        public float PlantDensity { get; private set; }
+        public float TreeDensity { get; private set; }
     }
 
     [System.Serializable]
@@ -254,5 +281,4 @@ namespace EcosystemSimulation
         ShallowGrass,
         Grass
     }
-
 }

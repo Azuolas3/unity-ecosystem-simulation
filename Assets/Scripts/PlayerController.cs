@@ -10,6 +10,8 @@ namespace EcosystemSimulation
     {
         [SerializeField]
         private CharacterController characterController;
+        [SerializeField]
+        private GameObject mapGenerationSettings;
         //[SerializeField]
         //private Canvas uiCanvas;
 
@@ -29,7 +31,7 @@ namespace EcosystemSimulation
         private float xRotation = 0f;
         private float yRotation = 0f;
 
-        private bool isMovementPaused;
+        private bool isMovementPaused = true;
 
         // Update is called once per frame
         void Update()
@@ -37,6 +39,7 @@ namespace EcosystemSimulation
             if(Input.GetKeyDown(KeyCode.Escape))
             {
                 isMovementPaused = !isMovementPaused;
+                mapGenerationSettings.SetActive(!mapGenerationSettings.activeSelf);
             }
 
             if(!isMovementPaused)
@@ -110,6 +113,14 @@ namespace EcosystemSimulation
             
             }
         }
+
+        //void HandleMenu()
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Escape))
+        //    {
+                
+        //    }
+        //}
 
         void UpdateAnimalInfoBar(Animal animal, TMP_Text textField)
         {

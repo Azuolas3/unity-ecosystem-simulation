@@ -11,7 +11,7 @@ namespace EcosystemSimulation
         {
             terrainGenerator = GetComponent<TerrainGeneration>();
 
-            terrainGenerator.GenerateTerrain();
+            //terrainGenerator.GenerateTerrain();
         }
     }
 }

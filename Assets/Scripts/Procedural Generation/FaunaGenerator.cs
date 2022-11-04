@@ -44,7 +44,7 @@ namespace EcosystemSimulation
                 {
                     if ((terrainMap[x, y] == TerrainName.Grass || terrainMap[x, y] == TerrainName.ShallowGrass) && !occupiedTilesMap[x, y])
                     {
-                        float chance = pseudoRNG.Next(0, 1000);
+                        float chance = (float)pseudoRNG.NextDouble();
                         if (chance <= preyDensity)
                         {
                             int chosenAnimalIndex = pseudoRNG.Next(0, preyPrefabs.Length);
@@ -102,11 +102,13 @@ namespace EcosystemSimulation
             preyCount = 0;
         }
 
-        public void Init(int seed, int width, int length, TerrainName[,] terrainMap, bool[,] occupiedTilesMap)
+        public void Init(int seed, int width, int length, float preyDensity, float predatorDensity, TerrainName[,] terrainMap, bool[,] occupiedTilesMap)
         {
             this.seed = seed;
             this.width = width;
             this.length = length;
+            this.preyDensity = preyDensity;
+            this.predatorDensity = predatorDensity;
             this.terrainMap = terrainMap;
             this.occupiedTilesMap = occupiedTilesMap;
         }

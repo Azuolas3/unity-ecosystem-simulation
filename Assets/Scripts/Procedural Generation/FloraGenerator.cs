@@ -37,7 +37,7 @@ namespace EcosystemSimulation
                 {
                     if(terrainMap[x, y] == TerrainName.Grass && !occupiedTilesMap[x, y])
                     {
-                        float chance = pseudoRNG.Next(0, 100);
+                        float chance = (float)pseudoRNG.NextDouble();
                         if(chance <= treeDensity)
                         {
                             int chosenTreeIndex = pseudoRNG.Next(0, treePrefabs.Length);
@@ -61,7 +61,7 @@ namespace EcosystemSimulation
                 {
                     if ((terrainMap[x, y] == TerrainName.Grass || terrainMap[x, y] == TerrainName.ShallowGrass) && !occupiedTilesMap[x, y])
                     {
-                        float chance = pseudoRNG.Next(0, 100);
+                        float chance = (float)pseudoRNG.NextDouble();
                         if (chance <= plantDensity)
                         {
                             int chosenPlantIndex = pseudoRNG.Next(0, plantPrefabs.Length);
@@ -81,11 +81,13 @@ namespace EcosystemSimulation
             Destroy(instantiatedFlora);
         }
 
-        public void Init(int seed, int width, int length, TerrainName[,] terrainMap, bool[,] occupiedTilesMap)
+        public void Init(int seed, int width, int length, float plantDensity, float treeDensity, TerrainName[,] terrainMap, bool[,] occupiedTilesMap)
         {
             this.seed = seed;
             this.width = width;
             this.length = length;
+            this.plantDensity = plantDensity;
+            this.treeDensity = treeDensity;
             this.terrainMap = terrainMap;
             this.occupiedTilesMap = occupiedTilesMap;
         }
