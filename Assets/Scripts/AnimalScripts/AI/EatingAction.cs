@@ -18,7 +18,7 @@ namespace EcosystemSimulation
             this.foodObject = foodObject;
             Debug.Log(actionPerformer.name + food.Eaters + food);
             Debug.Log(performer);
-            food.Eaters.Add(performer);         
+            food.Eaters.Add(performer);
         }
 
         public override void Execute()
@@ -26,21 +26,12 @@ namespace EcosystemSimulation
             float result = performer.Nourishment + food.NutritionalValue;
             performer.Nourishment = Mathf.Min(100, result);            
             food.Consume();
-            OnComplete();
         }
 
         public override void OnComplete()
         {
-            //foreach(Animal animal in food.Eaters)
-            //{
-            //    if(animal.currentAction != null && animal != null) //since the animal could be eaten or have his action cancelled on the same frame, need to check)
-            //    { 
-            //        Debug.Log($"Animal {animal.gameObject.name} cancelled rip");
-            //        animal.currentAction.Cancel();
-            //    }
-            //    //Debug.Log(animal.gameObject.name + " Cancelled");
-            //    //food.Eaters.Remove(animal);
-            //}
+            performer.currentAction = null;
+            performer.currentPriority = Animal.Priority.None;
         }
 
         public override void Cancel()

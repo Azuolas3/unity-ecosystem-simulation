@@ -16,19 +16,19 @@ namespace EcosystemSimulation
             return gameObject.transform.GetChild(index).gameObject;
         }
 
-        public static Vector3 RotateByAngle(this Vector3 vector, float angle) // dumb extension to prevent writing .transform.position all the time
+        public static Vector3 RotateByAngle(this Vector3 vector, float angle) // Rotates Vector by given euler angle in degrees
         {
             vector = Quaternion.Euler(0, angle, 0) * vector;
             return vector;
         }
 
-        public static bool IsClose(this Vector3 position, Vector3 destination, float distance) // a more performant (though less accurate) version of Vector3.Distance()
+        public static bool IsClose(this Vector3 position, Vector3 destination, float distance) //Checking whether one vector is some distance away from another vector
         {
             return Mathf.Abs(position.x - destination.x) < distance && //Doing this with Abs instead of Vector3.Distance for performance
                Mathf.Abs(position.z - destination.z) < distance;
         }
 
-        public static bool IsFar(this Vector3 position, Vector3 destination, float distance) // a more performant (though less accurate) version of Vector3.Distance()
+        public static bool IsFar(this Vector3 position, Vector3 destination, float distance) //Checking whether one vector is some distance away from another vector
         {
             return Mathf.Abs(position.x - destination.x) > distance && //Doing this with Abs instead of Vector3.Distance for performance
                Mathf.Abs(position.z - destination.z) > distance;

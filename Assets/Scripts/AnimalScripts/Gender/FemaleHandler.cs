@@ -44,14 +44,17 @@ namespace EcosystemSimulation
 
         void GiveBirth(GameObject gameObject, Genes fatherGenes)
         {
-            GameObject childObject = UnityEngine.Object.Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
-            Animal child = childObject.GetComponent<Animal>();
+            for(int i = 0; i < 2; i++)
+            {
+                GameObject childObject = UnityEngine.Object.Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
+                Animal child = childObject.GetComponent<Animal>();
 
 
-            AnimalStats childGenes = baseAnimal.genes.GetInheritedGenes(fatherGenes, baseAnimal.genes);
-            child.Init(childObject, 20, 20, childGenes, 0.25f, GetRandomGender(child));
-            childObject.transform.SetParent(gameObject.transform.parent);
-            Debug.Log("poof");
+                AnimalStats childGenes = baseAnimal.genes.GetInheritedGenes(fatherGenes, baseAnimal.genes);
+                child.Init(childObject, 20, 20, childGenes, 0.25f, GetRandomGender(child));
+                childObject.transform.SetParent(gameObject.transform.parent);
+                Debug.Log("poof");
+            }
         }
 
         IEnumerator PregnancyCouroutine(int gestationPeriod, Genes fatherGenes)

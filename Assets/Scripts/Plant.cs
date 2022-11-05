@@ -12,7 +12,7 @@ namespace EcosystemSimulation
         public float GrowthProgress { get; set; }
         private float growthTick = 0.001f;
 
-        private Vector3 prefabFullScale;
+        private float size;
         public List<Animal> Eaters
         {
             get { return eaters; }
@@ -24,10 +24,10 @@ namespace EcosystemSimulation
 
         public void Start()
         {
-            Eaters = new List<Animal>();
+            //Eaters = new List<Animal>();
 
-            prefabFullScale = gameObject.transform.lossyScale;
-            gameObject.transform.localScale = Vector3.zero;
+            size = gameObject.transform.lossyScale.x;
+            gameObject.transform.localScale = new Vector3(size, size, size) * GrowthProgress;
         }
 
         public void Update()
@@ -35,7 +35,7 @@ namespace EcosystemSimulation
             if(GrowthProgress != 1)
             {
                 GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick);
-                gameObject.transform.localScale = prefabFullScale * GrowthProgress;
+                gameObject.transform.localScale = new Vector3(size, size, size) * GrowthProgress;
             }
         
 
@@ -43,7 +43,7 @@ namespace EcosystemSimulation
             {
                 Debug.Log("Frame vibe check passed");
 
-                if (GrowthProgress == 1 && Random.Range(1, 100) > 98)
+                if (GrowthProgress == 1 && Random.value > 0.98f)
                 {
                     DisperseSeeds();
                 }
@@ -62,18 +62,21 @@ namespace EcosystemSimulation
                     animal.currentAction.Cancel();
                 }
             }
+
+            MapHelper.Instance.SetTileOccupancy((int)gameObject.Position().x, (int)gameObject.Position().y, false);
         }
 
         public void Init(int nutritionalValue, float growthProgress)
         {
+            Eaters = new List<Animal>();
             GrowthProgress = growthProgress;
             this.nutritionalValue = nutritionalValue;
-            prefabFullScale = gameObject.transform.lossyScale;
+            size = gameObject.transform.lossyScale.x;
         }
 
         private void DisperseSeeds()
         {
-            Vector3 offset = new Vector3(0.5f, 0, 0.5f);
+            Vector3 offset = new Vector3(1f, 0, 1f);
 
             if (Random.value < 0.7f)
                 offset.x *= -1;
@@ -82,11 +85,13 @@ namespace EcosystemSimulation
                 offset.z *= -1;
 
             Vector3 plantPosition = gameObject.transform.position + offset;
-            if (MapHelper.Instance.IsOutOfBounds(plantPosition) || MapHelper.Instance.IsInWater(plantPosition))
+            if (MapHelper.Instance.IsInaccessible(plantPosition) || MapHelper.Instance.IsOccupiedByFlora(plantPosition))
                 return;
 
             GameObject plant = Instantiate(gameObject, plantPosition, Quaternion.identity);
+            plant.GetComponent<Plant>().Init(NutritionalValue, 0);
             plant.transform.SetParent(gameObject.transform.parent);
+            MapHelper.Instance.SetTileOccupancy((int)plantPosition.x, (int)plantPosition.y, true);
             //plant.GetComponent<Plant>().Init(NutritionalValue, 0);
             //plant.transform.localScale = Vector3.zero;
         }

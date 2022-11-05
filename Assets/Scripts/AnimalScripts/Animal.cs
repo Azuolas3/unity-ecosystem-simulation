@@ -107,7 +107,7 @@ namespace EcosystemSimulation
                     Debug.Log("bad");
             }
 
-            if (currentDestination.IsFar(currentAction.ActionDestination, 0.5f))
+            if (currentDestination.IsFar(currentAction.ActionDestination, 0.1f))
             {
                 currentDestination = currentAction.ActionDestination;
                 navAgent.SetDestination(currentDestination);

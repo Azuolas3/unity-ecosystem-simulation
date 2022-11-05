@@ -13,7 +13,7 @@ namespace EcosystemSimulation
         int mapLength;
         int mapWidth;
         TerrainName[,] terrainMap;
-        bool[,] occupiedTiles;
+        bool[,] occupiedFloraTiles;
 
         public MapHelper(int length, int width, TerrainName[,] terrain, bool[,] occupiedTilesMap)
         {
@@ -21,7 +21,7 @@ namespace EcosystemSimulation
             mapLength = length;
             mapWidth = width;
             terrainMap = terrain;
-            occupiedTiles = occupiedTilesMap;
+            occupiedFloraTiles = occupiedTilesMap;
         }
 
         public bool IsInaccessible(Vector3 point)
@@ -51,18 +51,21 @@ namespace EcosystemSimulation
                 return false;
         }
 
-        public bool IsInTree(Vector3 point)
+        public bool IsOccupiedByFlora(Vector3 point)
         {
             int x = (int)point.x;
             int z = (int)point.z;
 
-            if (!IsOutOfBounds(point) && occupiedTiles[x, z] == true)
+            if (!IsOutOfBounds(point) && occupiedFloraTiles[x, z] == true)
                 return true;
             else
                 return false;
         }
 
-        //private int
+        public void SetTileOccupancy(int x, int y, bool value)
+        {
+            occupiedFloraTiles[x, y] = value;
+        }
     }
 }
 

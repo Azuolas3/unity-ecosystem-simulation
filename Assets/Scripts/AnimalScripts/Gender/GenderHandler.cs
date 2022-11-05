@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace EcosystemSimulation
 {
+
+    // Class which handles anything that relates with an animals gender - it's gender, how it reproduces, etc.
     public abstract class GenderHandler
     {
         protected Animal baseAnimal;
@@ -21,8 +23,10 @@ namespace EcosystemSimulation
 
         protected bool IsOppositeGender(AnimalGender gender)
         {
-            if (Gender == gender) return true;
-            else return false;
+            if (Gender == gender) 
+                return true;
+            else 
+                return false;
         }
 
         public abstract Action HandleReproductionPriority(Func<Collider[]> getColliders);

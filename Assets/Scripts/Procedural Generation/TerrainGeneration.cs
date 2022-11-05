@@ -75,11 +75,11 @@ namespace EcosystemSimulation
 
             floraGenerator.Init(map.Seed, map.Width, map.Length, map.PlantDensity, map.TreeDensity, terrainMap, occupiedTilesMap);
             floraGenerator.GenerateTrees();
-
-            bool[,] occupiedTilesMapCopy = (bool[,])occupiedTilesMap.Clone();
-            new MapHelper(map.Length - 1, map.Width - 1, terrainMap, occupiedTilesMap); // Passing dimensions subtracted by one since that is the actual size of the map
             floraGenerator.GeneratePlants();
-            
+
+            bool[,] occupiedFloraTiles = (bool[,])occupiedTilesMap.Clone();
+            new MapHelper(map.Length - 1, map.Width - 1, terrainMap, occupiedFloraTiles); // Passing dimensions subtracted by one since that is the actual size of the map
+
 
             faunaGenerator.Init(map.Seed, map.Width, map.Length, map.PreyDensity, map.PredatorDensity, terrainMap, occupiedTilesMap);
             faunaGenerator.GeneratePreyFauna();

@@ -76,7 +76,7 @@ namespace EcosystemSimulation
             float result;
             try
             {
-                result = float.Parse(txt) / 100; //Dividing by 100 since code expects value from 0 to 1
+                result = (float.Parse(txt, System.Globalization.CultureInfo.InvariantCulture)) / 100; //Dividing by 100 since code expects value from 0 to 1
                 return result;
             }
             catch
@@ -101,7 +101,7 @@ namespace EcosystemSimulation
 
         void GenerateInitialSimulation()
         {
-            MapSettings mapSettings = new MapSettings(0, 60, 60, 0.02f, 0.005f, 0.15f, 0.2f);
+            MapSettings mapSettings = new MapSettings(0, 60, 60, 0.03f, 0.003f, 0.15f, 0.2f);
             terrainGenerator.GenerateTerrain(mapSettings);
         }
     }
