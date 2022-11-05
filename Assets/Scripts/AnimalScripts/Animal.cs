@@ -251,42 +251,44 @@ namespace EcosystemSimulation
         protected Vector3 GetRunningAwayDestination(Collider predator)
         {
             Vector3 position = gameObject.Position();
-            Vector3 searchDestination;
+            Vector3 runningDestination;
             float randomAngle;
 
             float x;
             float z;
 
-            Vector3 searchDirection = (position - predator.gameObject.Position()).normalized;
+            //Vector3 searchDirection = (position - predator.gameObject.Position()).normalized;
 
-            //if (IsOutOfBounds(destination) || IsInWater(destination))
-            //{
-            //    destination = Quaternion.AngleAxis(90, Vector3.up) * destination;
-            //    if (IsOutOfBounds(destination) || IsInWater(destination))
-            //    {
-            //        destination = Quaternion.AngleAxis(-90, Vector3.up) * destination;
-            //        if(IsOutOfBounds(destination) || IsInWater(destination))
-            //            return gameObject.Position();
-            //    }
-            //}
-
-            int loopCap = 0;
+            int loopIteration = 0;
+            int directionCount = 0;
+            int nDirection = 0;
+            // Rather awfully written loop, but the idea is that it tries to find a destination to go to 
+            // by prioritising running directly away from the predator and if it cant find a suitable destination forwards, tries the sides
+            // and finally just hopes for the best and runs the same direction as the predator is coming from
             do
             {
-                searchDestination = (searchDirection * animalStats.LineOfSightRadius) + position;
-                if (!IsInaccessible(searchDestination))
+                Vector3 searchDirection = (position - predator.gameObject.Position()).normalized;
+                randomAngle = Random.Range((90 * directionCount) - 45, (90 * directionCount) + 45);
+                runningDestination = (searchDirection.RotateByAngle(randomAngle) * animalStats.LineOfSightRadius) + position;
+
+                //runningDestination = (searchDirection * animalStats.LineOfSightRadius) + position;
+                loopIteration++;
+
+                if (loopIteration == 15)
                 {
-                    Debug.Log("changed path" + searchDestination);
-                    searchDirection = -searchDirection;
+                    loopIteration = 0;
+                    if (nDirection % 2 == 0)
+                    {
+                        directionCount++;
+                    }
+
+                    directionCount *= -1;
+                    nDirection++;
                 }
 
-
-
-                searchDestination = (searchDirection * animalStats.LineOfSightRadius) + position;
-                loopCap++;
-            } while ((IsOutOfBounds(searchDestination) || IsInWater(searchDestination)) && loopCap < 32);
+            } while (IsInaccessible(runningDestination) && loopIteration < 16 && nDirection < 3);
             
-            return searchDestination;
+            return runningDestination;
         }
 
         public bool IsInaccessible(Vector3 position)

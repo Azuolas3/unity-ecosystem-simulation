@@ -45,10 +45,7 @@ namespace EcosystemSimulation
         void Start()
         {
             SetupInputListeners();
-            //Time.timeScale = 2f;
-            //seedInputField.onEndEdit.AddListener(ChangeListener);
-
-            //button.onClick.AddListener(OnClickGenerate);
+            GenerateInitialSimulation();
         }
 
         void OnClickGenerate()
@@ -100,6 +97,12 @@ namespace EcosystemSimulation
             treeInputField.onEndEdit.AddListener((string value) => treeDensity = ParsePercentageInput(value));
 
             button.onClick.AddListener(OnClickGenerate);
+        }
+
+        void GenerateInitialSimulation()
+        {
+            MapSettings mapSettings = new MapSettings(0, 60, 60, 0.02f, 0.005f, 0.15f, 0.2f);
+            terrainGenerator.GenerateTerrain(mapSettings);
         }
     }
 }

@@ -1524,7 +1524,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 676832269}
-  - component: {fileID: 676832268}
   - component: {fileID: 676832267}
   - component: {fileID: 676832270}
   - component: {fileID: 676832271}
@@ -1573,24 +1572,12 @@ MonoBehaviour:
   plantDensity: 0
   width: 60
   length: 60
+  mapSeed: 0
   navMeshSurface: {fileID: 36827615}
   mapCollider: {fileID: 1302744930}
   meshFilter: {fileID: 1302744926}
   meshRenderer: {fileID: 1302744925}
   spawnPredators: 1
---- !u!114 &676832268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 676832266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a5e1791de4a04e4b82f092c58b6f64b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  terrainGenerator: {fileID: 0}
 --- !u!4 &676832269
 Transform:
   m_ObjectHideFlags: 0
@@ -1649,7 +1636,7 @@ MonoBehaviour:
   - {r: 0.89411765, g: 0.72156864, b: 0.5803922, a: 0.39215687}
   - {r: 0.9607843, g: 0.95686275, b: 0.9490196, a: 0.39215687}
   - {r: 0.65882355, g: 0.6666667, b: 0.654902, a: 0.39215687}
-  - {r: 0.05882353, g: 0.05882353, b: 0.05882353, a: 0.39215687}
+  - {r: 0.1792453, g: 0.1530349, b: 0.1530349, a: 0.39215687}
   predatorDensity: 0.005
   preyDensity: 20
   spawnOne: 0
@@ -2656,7 +2643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03e4e67d302ae3e47a9023afb0fadcfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulationController: {fileID: 676832268}
+  simulationController: {fileID: 0}
   terrainGenerator: {fileID: 676832267}
   button: {fileID: 1058268123}
   seedInputField: {fileID: 1370552706}
