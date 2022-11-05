@@ -110,16 +110,7 @@ namespace EcosystemSimulation
 
         public void Consume()
         {
-            Destroy(gameObject);
-            gameObject.GetComponent<Collider>().enabled = false;
-            foreach (Animal animal in Eaters)
-            {
-                if (animal.currentAction != null && animal != null) //since the animal could be eaten or have his action cancelled on the same frame, need to check)
-                {
-                    Debug.Log($"Animal {animal.gameObject.name} cancelled rip");
-                    animal.currentAction.Cancel();
-                }
-            }
+            OnDeath();
         }
 
         protected override void OnDeath()
