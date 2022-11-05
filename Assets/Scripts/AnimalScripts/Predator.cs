@@ -32,7 +32,7 @@ namespace EcosystemSimulation
                     {
                         Collider collider = FindNearestCollider(PreyColliders);
                         Vector3 destination = collider.gameObject.transform.position;
-                        Debug.Log($"{gameObject.name} {collider} {destination}");
+                        Debug.Log($"{gameObject.name} {collider.name} {destination}");
                         IEatable prey = collider.GetComponent<IEatable>();
                         return new EatingAction(this, prey, collider.gameObject);
                     }
@@ -59,6 +59,12 @@ namespace EcosystemSimulation
                     return new SearchAction(this, () => PredatorColliders, GetSearchDestination()); ;
 
             }
+        }
+
+        protected override void OnDeath()
+        {
+            Destroy(gameObject);
+            gameObject.GetComponent<Collider>().enabled = false;
         }
     }
 }

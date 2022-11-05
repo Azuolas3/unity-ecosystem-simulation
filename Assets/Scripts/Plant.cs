@@ -54,6 +54,14 @@ namespace EcosystemSimulation
         {
             Destroy(gameObject);
             gameObject.GetComponent<Collider>().enabled = false; // disabling it manually after destroying since destroy is delayed until end of update(), which means another animal can queue action to eat it aswell.
+            foreach (Animal animal in Eaters)
+            {
+                if (animal.currentAction != null && animal != null) //since the animal could be eaten or have his action cancelled on the same frame, need to check)
+                {
+                    Debug.Log($"Animal {animal.gameObject.name} cancelled rip");
+                    animal.currentAction.Cancel();
+                }
+            }
         }
 
         public void Init(int nutritionalValue, float growthProgress)

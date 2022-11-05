@@ -85,7 +85,7 @@ namespace EcosystemSimulation
                             obj.transform.SetParent(instantiatedFauna.transform);
 
                             GenderHandler gender = predatorCount % 2 == 0 ? new MaleHandler(animal) : new FemaleHandler(animal, 10);
-                            animal.Init(obj, 50, 25, 3, 5, 1, gender, GetRandomColor(preyColors));
+                            animal.Init(obj, 50, 25, 3.5f, 5, 1, gender, GetRandomColor(preyColors));
                             obj.name = "Wolf" + predatorCount;
 
                             occupiedTilesMap[x, y] = true;

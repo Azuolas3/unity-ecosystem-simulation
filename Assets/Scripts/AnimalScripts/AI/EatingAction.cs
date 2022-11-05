@@ -31,13 +31,16 @@ namespace EcosystemSimulation
 
         public override void OnComplete()
         {
-            foreach(Animal animal in food.Eaters)
-            {
-                if(animal.currentAction != null) //since there can be animals on this list that had their action cancelled/changed due to other factors, we have to                               
-                    animal.currentAction.Cancel(); // check for null
-                //Debug.Log(animal.gameObject.name + " Cancelled");
-                //food.Eaters.Remove(animal);
-            }
+            //foreach(Animal animal in food.Eaters)
+            //{
+            //    if(animal.currentAction != null && animal != null) //since the animal could be eaten or have his action cancelled on the same frame, need to check)
+            //    { 
+            //        Debug.Log($"Animal {animal.gameObject.name} cancelled rip");
+            //        animal.currentAction.Cancel();
+            //    }
+            //    //Debug.Log(animal.gameObject.name + " Cancelled");
+            //    //food.Eaters.Remove(animal);
+            //}
         }
 
         public override void Cancel()

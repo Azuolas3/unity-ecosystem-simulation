@@ -98,6 +98,8 @@ namespace EcosystemSimulation
             if (NeedsAction)
             {
                 currentAction = GetNextAction();
+                Debug.Log("Needs action  " + animalObject.name);
+
                 Debug.Log("Needs action  " + animalObject.name + currentAction + currentAction.ActionDestination);
                 currentDestination = currentAction.ActionDestination;
 
@@ -105,25 +107,11 @@ namespace EcosystemSimulation
                     Debug.Log("bad");
             }
 
-            //Debug.Log($"current action {gameObject.name} {currentAction}  current ActioNDestination{currentAction.ActionDestination}");
-            //if (Time.frameCount % 30 == 0)
-            //{
-            //    navAgent.SetDestination(currentAction.ActionDestination);
-
-            //}
-
             if (currentDestination.IsFar(currentAction.ActionDestination, 0.5f))
             {
                 currentDestination = currentAction.ActionDestination;
                 navAgent.SetDestination(currentDestination);
             }
-
-            //if (navAgent.destination.x != currentDestination.x || navAgent.destination.z != currentDestination.z) //checking specifically x and z since
-            //{
-            //    //Debug.Log($"Changed {gameObject.name} {Mathf.RoundToInt(currentDestination.x)} { Mathf.RoundToInt(currentDestination.z)} {Mathf.RoundToInt(navAgent.destination.x)} {Mathf.RoundToInt(navAgent.destination.z)} {navAgent.destination.x != currentDestination.x || navAgent.destination.z != currentDestination.z} {currentAction}");
-            //    Debug.Log($"Changed {gameObject.name} {currentDestination} {navAgent.destination} {currentAction}");
-            //    //navAgent.SetDestination(currentDestination);
-            //}
 
             if (currentAction.AreConditionsMet())
             {
@@ -151,7 +139,7 @@ namespace EcosystemSimulation
                 Health -= thirstTick;
 
             if (Health <= 0)
-                Destroy(gameObject);
+               OnDeath();
         }
 
         public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, float growthProgress, GenderHandler gender, Color colour)
@@ -310,6 +298,7 @@ namespace EcosystemSimulation
 
         protected abstract Priority GetPriority();
         protected abstract Action GetNextAction();
+        protected abstract void OnDeath();
     }
 
     public struct AnimalStats
