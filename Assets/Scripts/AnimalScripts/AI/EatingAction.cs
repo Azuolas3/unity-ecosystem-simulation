@@ -28,12 +28,6 @@ namespace EcosystemSimulation
             food.Consume();
         }
 
-        public override void OnComplete()
-        {
-            performer.currentAction = null;
-            performer.currentPriority = Animal.Priority.None;
-        }
-
         public override void Cancel()
         {
             performer.currentPriority = Animal.Priority.None;

@@ -10,7 +10,6 @@ namespace EcosystemSimulation
         public abstract Vector3 ActionDestination { get; }
 
         public abstract void Execute();
-        public abstract void OnComplete();
         public abstract void Cancel();
         public abstract bool AreConditionsMet();
     }

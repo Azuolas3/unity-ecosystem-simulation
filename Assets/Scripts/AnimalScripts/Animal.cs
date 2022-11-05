@@ -17,7 +17,6 @@ namespace EcosystemSimulation
 
         public Priority currentPriority;
         public Vector3 currentDestination;
-        //public Vector3 currentDestination;
         public Action currentAction;
 
         public GameObject animalObject;
@@ -35,9 +34,9 @@ namespace EcosystemSimulation
         [SerializeField]
         protected float reproductionUrge;
 
-        private float hungerTick = 0.01f;
-        private float thirstTick = 0.01f;
-        private float growthTick = 0.001f;
+        private const float hungerTick = 0.01f;
+        private const float thirstTick = 0.01f;
+        private const float growthTick = 0.001f;
 
         public float GrowthProgress { get; set; }
         [SerializeField]
@@ -84,13 +83,6 @@ namespace EcosystemSimulation
         public Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, animalStats.LineOfSightRadius, fov.PlantLayerMask); } }
         public Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, animalStats.LineOfSightRadius, fov.PreyLayerMask); } }
 
-        public void Start()
-        {
-            Health = 100;
-            gendertest = genderHandler.Gender;
-            //navAgent.autoRepath = false;
-        }
-
         public void Update()
         {       
             currentPriority = GetPriority();
@@ -98,13 +90,9 @@ namespace EcosystemSimulation
             if (NeedsAction)
             {
                 currentAction = GetNextAction();
-                Debug.Log("Needs action  " + animalObject.name);
-
-                Debug.Log("Needs action  " + animalObject.name + currentAction + currentAction.ActionDestination);
                 currentDestination = currentAction.ActionDestination;
 
-                if (!navAgent.SetDestination(currentDestination))
-                    Debug.Log("bad");
+                navAgent.SetDestination(currentDestination);
             }
 
             if (currentDestination.IsFar(currentAction.ActionDestination, 0.1f))
@@ -115,7 +103,6 @@ namespace EcosystemSimulation
 
             if (currentAction.AreConditionsMet())
             {
-                //Debug.Log("action completed " + animalObject.name + currentAction);
                 currentAction.Execute();
             }
 
@@ -163,6 +150,7 @@ namespace EcosystemSimulation
             genes = new Genes(animalStats);
 
             genderHandler = gender;
+            Health = 100;
         }
 
         public void Init(GameObject animalObject, float baseHunger, float baseThirst, AnimalStats stats, float growthProgress, GenderHandler gender)
@@ -184,8 +172,8 @@ namespace EcosystemSimulation
             GrowthProgress = growthProgress;
             navAgent.speed = GrowthProgress * animalStats.MovementSpeed;
             genes = new Genes(animalStats);
-            Debug.Log($"{gameObject.name} stats {stats.MovementSpeed} animalStats {animalStats.MovementSpeed}");
             genderHandler = gender;
+            Health = 100;
         }
 
         public Collider FindNearestCollider(Collider[] colliders)
@@ -229,8 +217,6 @@ namespace EcosystemSimulation
                 }
 
                 searchDestination = (searchDirection * animalStats.LineOfSightRadius) + position;
-                //x = (Mathf.Cos(randomAngle) * animalStats.LineOfSightRadius * 2) + position.x;
-                //z = (Mathf.Sin(randomAngle) * animalStats.LineOfSightRadius * 2) + position.z;
                 loopCounter++;
             } while (IsInaccessible(searchDestination) && loopCounter < 32);
             return searchDestination;
@@ -245,8 +231,6 @@ namespace EcosystemSimulation
             float x;
             float z;
 
-            //Vector3 searchDirection = (position - predator.gameObject.Position()).normalized;
-
             int loopIteration = 0;
             int directionCount = 0;
             int nDirection = 0;
@@ -259,9 +243,7 @@ namespace EcosystemSimulation
                 randomAngle = Random.Range((90 * directionCount) - 45, (90 * directionCount) + 45);
                 runningDestination = (searchDirection.RotateByAngle(randomAngle) * animalStats.LineOfSightRadius) + position;
 
-                //runningDestination = (searchDirection * animalStats.LineOfSightRadius) + position;
                 loopIteration++;
-
                 if (loopIteration == 15)
                 {
                     loopIteration = 0;
@@ -282,18 +264,6 @@ namespace EcosystemSimulation
         public bool IsInaccessible(Vector3 position)
         {
             return MapHelper.Instance.IsInaccessible(position);
-        }
-
-        private bool IsOutOfBounds(Vector3 position)
-        {
-            return MapHelper.Instance.IsOutOfBounds(position);
-            //return !Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5);  // Launches raycast from vector offset directly downward to find if is out of bounds
-        }
-
-        private bool IsInWater(Vector3 position)
-        {
-            return MapHelper.Instance.IsInWater(position);
-            //return Physics.Raycast(position + new Vector3(0, 2, 0), Vector3.down, 5, fov.WaterLayerMask);  // Launches raycast from vector offset directly downward to find if is out of bounds
         }
 
         protected abstract Priority GetPriority();

@@ -10,7 +10,7 @@ namespace EcosystemSimulation
     public class UIHandler : MonoBehaviour
     {
         [SerializeField]
-        TerrainGeneration terrainGenerator;
+        TerrainGenerator terrainGenerator;
 
         [SerializeField]
         Button button;
@@ -79,7 +79,7 @@ namespace EcosystemSimulation
             }
             catch
             {
-                Debug.Log("Input is not integer");
+                Debug.Log("Input is not a float");
                 return 0;
             }
         }

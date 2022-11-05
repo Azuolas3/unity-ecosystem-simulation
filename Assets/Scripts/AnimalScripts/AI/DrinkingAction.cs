@@ -22,14 +22,8 @@ namespace EcosystemSimulation
         public override void Execute()
         {
             performer.Hydration = 100;
-
-            OnComplete();
-        }
-
-        public override void OnComplete()
-        {
-            Debug.Log("I drank lule");
-            performer.currentAction.Cancel();
+            performer.currentPriority = Animal.Priority.None;
+            performer.currentAction = null;
         }
 
         public override void Cancel()

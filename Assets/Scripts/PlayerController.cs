@@ -59,8 +59,8 @@ namespace EcosystemSimulation
 
         void CameraRotation()
         {
-            yRotation += Input.GetAxis("Mouse X") * mouseSensitivity; //* Time.deltaTime;
-            xRotation += Input.GetAxis("Mouse Y") * -1 * mouseSensitivity; // * Time.deltaTime;
+            yRotation += Input.GetAxis("Mouse X") * mouseSensitivity;
+            xRotation += Input.GetAxis("Mouse Y") * -1 * mouseSensitivity;
 
             xRotation = Mathf.Clamp(xRotation, -90, 90);
 
@@ -93,10 +93,8 @@ namespace EcosystemSimulation
 
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("spaudziam lol");
                 if(Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
                 {
-                    Debug.Log("kazka paspaudem lol  " + hitInfo.collider + " " + hitInfo.collider.gameObject);
                     if (hitInfo.collider.GetComponent<Animal>() != null)
                     {
                         currentSelectedAnimal = hitInfo.collider.GetComponent<Animal>();
@@ -105,7 +103,6 @@ namespace EcosystemSimulation
 
                         currentText = currentUIBar.GetComponentInChildren<TMP_Text>();
                         UpdateAnimalInfoBar(currentSelectedAnimal, currentText);
-                        Debug.Log($"selected {currentSelectedAnimal.name} {currentSelectedAnimal.Hydration}");
                     }
                     else
                     {
@@ -117,14 +114,6 @@ namespace EcosystemSimulation
             
             }
         }
-
-        //void HandleMenu()
-        //{
-        //    if (Input.GetKeyDown(KeyCode.Escape))
-        //    {
-                
-        //    }
-        //}
 
         void UpdateAnimalInfoBar(Animal animal, TMP_Text textField)
         {

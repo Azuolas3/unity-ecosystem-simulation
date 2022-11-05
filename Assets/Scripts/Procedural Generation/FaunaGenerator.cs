@@ -30,9 +30,6 @@ namespace EcosystemSimulation
         private GameObject instantiatedFauna;
         private bool[,] occupiedTilesMap;
 
-        [SerializeField]
-        private bool spawnOne = false;
-
         public void GeneratePreyFauna()
         {
             instantiatedFauna = new GameObject("Instantiated fauna");
@@ -52,14 +49,12 @@ namespace EcosystemSimulation
                             Prey prey = obj.GetComponent<Prey>();
                             obj.transform.SetParent(instantiatedFauna.transform);
 
-                            GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 5);
+                            GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 10);
                             prey.Init(obj, 50, 25, 3, 5, 1, gender, GetRandomColor(preyColors));
                             obj.name = "Rabbit" + preyCount;
 
                             occupiedTilesMap[x, y] = true;
                             preyCount++;
-                            if (spawnOne && preyCount == 1)
-                                return;
                         }
                     }
                 }

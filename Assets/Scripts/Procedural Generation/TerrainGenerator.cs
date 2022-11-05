@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace EcosystemSimulation
 {
-    public class TerrainGeneration : MonoBehaviour
+    public class TerrainGenerator : MonoBehaviour
     {
         public FloraGenerator floraGenerator;
         public FaunaGenerator faunaGenerator;
@@ -17,9 +17,10 @@ namespace EcosystemSimulation
 
         private TerrainName[,] terrainMap;
 
-        //private GameObject[] instantiatedObjects;
         private GameObject instantiatedObjects;
         private bool[,] occupiedTilesMap;
+
+        public NavMeshSurface navMeshSurface;
 
         [SerializeField]
         private float noiseScale;
@@ -43,14 +44,10 @@ namespace EcosystemSimulation
         [SerializeField]
         public int mapSeed;
 
-        public NavMeshSurface navMeshSurface;
-
         [SerializeField]
         private MeshCollider mapCollider;
         private GameObject waterColliderObject;
         private GameObject wallColliderObject;
-
-        private List<GameObject> waterColliderObjects = new List<GameObject>();
 
         public MeshFilter meshFilter;
         public MeshRenderer meshRenderer;
@@ -158,7 +155,6 @@ namespace EcosystemSimulation
                     {
                         GameObject temp = InstantiateWaterCollider(x, y);
                         temp.transform.SetParent(waterColliderObject.transform);
-                        waterColliderObjects.Add(temp);
                     }
                 }
             }
@@ -168,12 +164,12 @@ namespace EcosystemSimulation
         {
             GameObject obj = new GameObject();
             Vector3 position = new Vector3(x + 0.5f, 0, y + 0.5f);
-            Vector3 size = new Vector3(1, 0.5f, 1);
+            Vector3 size = new Vector3(1, 0.5f, 1); // y slightly smaller to avoid problems with raycasts
 
             obj.layer = 4; //water layer mask
             BoxCollider collider = obj.AddComponent<BoxCollider>();
             obj.transform.position = position;
-            collider.size = size; // making y smaller to prevent problems with raycasts
+            collider.size = size;
 
             NavMeshObstacle obstacleComponent = obj.AddComponent<NavMeshObstacle>();
             obstacleComponent.carving = true;

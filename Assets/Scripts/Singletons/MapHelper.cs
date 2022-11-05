@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EcosystemSimulation
 {
-    //Singleton used to start various couroutines for classes which do not derive from MonoBehaviour
+    //Singleton used to get information about the map.
     public class MapHelper
     {
         private static MapHelper instance;

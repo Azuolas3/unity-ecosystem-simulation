@@ -10,7 +10,7 @@ namespace EcosystemSimulation
 
         [SerializeField]
         public float GrowthProgress { get; set; }
-        private float growthTick = 0.001f;
+        private const float growthTick = 0.001f;
 
         private float size;
         public List<Animal> Eaters
@@ -24,8 +24,6 @@ namespace EcosystemSimulation
 
         public void Start()
         {
-            //Eaters = new List<Animal>();
-
             size = gameObject.transform.lossyScale.x;
             gameObject.transform.localScale = new Vector3(size, size, size) * GrowthProgress;
         }
@@ -92,8 +90,6 @@ namespace EcosystemSimulation
             plant.GetComponent<Plant>().Init(NutritionalValue, 0);
             plant.transform.SetParent(gameObject.transform.parent);
             MapHelper.Instance.SetTileOccupancy((int)plantPosition.x, (int)plantPosition.y, true);
-            //plant.GetComponent<Plant>().Init(NutritionalValue, 0);
-            //plant.transform.localScale = Vector3.zero;
         }
     }
 }

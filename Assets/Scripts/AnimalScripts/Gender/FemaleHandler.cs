@@ -39,7 +39,6 @@ namespace EcosystemSimulation
             hasMate = false;
             isPregnant = true;
             baseAnimal.StartCoroutine(PregnancyCouroutine(gestationPeriod, fatherGenes));
-            //CouroutineHelper.Instance.CallCouroutine(PregnancyCouroutine(gestationPeriod, fatherGenes));
         }
 
         void GiveBirth(GameObject gameObject, Genes fatherGenes)

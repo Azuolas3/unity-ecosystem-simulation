@@ -19,11 +19,6 @@ namespace EcosystemSimulation
 
         public override void Execute()
         {
-            OnComplete();
-        }
-
-        public override void OnComplete()
-        {
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }
@@ -47,9 +42,6 @@ namespace EcosystemSimulation
                 case Animal.Priority.RunAway:
                     moveString = "running away";
                     break;
-                //case Animal.Priority.Reproduce:
-                //    moveString = "idling";
-                //    break;
                 default:
                     moveString = "idling";
                     break;

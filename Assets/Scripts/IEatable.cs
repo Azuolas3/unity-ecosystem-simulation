@@ -9,7 +9,7 @@ namespace EcosystemSimulation
     {
         void Consume();
 
+        List<Animal> Eaters { get; set; } // a list of all animals that want to eat this IEatable
         int NutritionalValue { get; }
-        List<Animal> Eaters { get; set; }
     }
 }

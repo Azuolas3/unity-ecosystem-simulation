@@ -19,12 +19,6 @@ namespace EcosystemSimulation
         public override void Execute()
         {
             matingPartner.genderHandler.HandleMating(matingPartner.genes);
-            Debug.Log($"Mated {matingPartner.gameObject.name}");
-            OnComplete();
-        }
-
-        public override void OnComplete()
-        {
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }

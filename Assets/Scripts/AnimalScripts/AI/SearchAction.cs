@@ -22,11 +22,6 @@ namespace EcosystemSimulation
 
         public override void Execute()
         {
-            OnComplete();
-        }
-
-        public override void OnComplete()
-        {
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }

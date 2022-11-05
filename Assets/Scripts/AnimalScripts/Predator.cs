@@ -11,13 +11,12 @@ namespace EcosystemSimulation
         {
             if (ReproductionUrge > 70 && Nourishment > 20 && Hydration > 20 && genderHandler.IsAvailableForMating())
             {
-                Debug.Log("NORO YRA");
                 return Priority.Reproduce;
             }
 
-            if (nourishment < 100 && Nourishment <= Hydration)
+            if (nourishment < 90 && Nourishment <= Hydration)
                 return Priority.FindFood;
-            if (hydration < 100 && Hydration <= Nourishment)
+            if (hydration < 90 && Hydration <= Nourishment)
                 return Priority.FindWater;
 
             return Priority.None;
@@ -32,7 +31,6 @@ namespace EcosystemSimulation
                     {
                         Collider collider = FindNearestCollider(PreyColliders);
                         Vector3 destination = collider.gameObject.transform.position;
-                        Debug.Log($"{gameObject.name} {collider.name} {destination}");
                         IEatable prey = collider.GetComponent<IEatable>();
                         return new EatingAction(this, prey, collider.gameObject);
                     }
@@ -56,7 +54,7 @@ namespace EcosystemSimulation
                 case Priority.Reproduce:
                     return genderHandler.HandleReproductionPriority(() => PredatorColliders);
                 default:
-                    return new SearchAction(this, () => PredatorColliders, GetSearchDestination()); ;
+                    return new MoveToAction(this, GetSearchDestination());
 
             }
         }

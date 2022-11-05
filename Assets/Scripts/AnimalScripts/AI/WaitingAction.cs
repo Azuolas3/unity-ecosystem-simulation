@@ -29,19 +29,12 @@ namespace EcosystemSimulation
 
         public override void Execute()
         {
-            OnComplete();
-        }
-
-        public override void OnComplete()
-        {
-            Debug.Log("Timer completed");
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }
 
         public override void Cancel()
         {
-            Debug.Log("Timer cancelled");
             CouroutineHelper.Instance.StopCouroutine(WaitSeconds(duration));
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;

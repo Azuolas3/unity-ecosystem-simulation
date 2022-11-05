@@ -8,9 +8,6 @@ namespace EcosystemSimulation
     {
         public static MeshData GenerateMesh(int width, int length, float[,] noiseMap)
         {
-            //width++;
-            //length++;
-
             MeshData meshData = new MeshData(width, length);
             int vertexIndex = 0;
 

@@ -29,11 +29,8 @@ namespace EcosystemSimulation
                         matingAnimal.genderHandler.hasMate = true;
                         matingAnimal.currentDestination = matingAnimal.gameObject.Position();
                         matingAnimal.currentAction = null;
-                        Debug.Log($"mating {matingAnimal.gameObject.name} and {baseAnimal.gameObject.name}");
-                        //Quaternion rotationQuaternion = GetRotationQuaternion(baseAnimal.gameObject.Position(), matingAnimal.gameObject.Position());
                         Transform partnerTransform = matingAnimal.gameObject.transform;
-                        //partnerTransform.rotation = Quaternion.Slerp(partnerTransform.rotation, rotationQuaternion, Time.deltaTime * 2);
-                        //partnerTransform.LookAt(baseAnimal.gameObject.Position());
+                        // make partner rotate towards this animal to make it look better
                         baseAnimal.StartCoroutine(RotateToDirection(partnerTransform, baseAnimal.gameObject.Position(), 0.5f));
                         
                         return new MatingAction(baseAnimal, matingAnimal);
@@ -53,12 +50,6 @@ namespace EcosystemSimulation
         {
             return (partner.currentPriority == Animal.Priority.Reproduce && partner.genderHandler.Gender == AnimalGender.Female && !partner.genderHandler.hasMate);
         }
-
-        //private Quaternion GetRotationQuaternion(Vector3 position, Vector3 fromPosition)
-        //{
-        //    Vector3 direction = (position - fromPosition).normalized;
-        //    return Quaternion.LookRotation(direction);
-        //}
 
         public IEnumerator RotateToDirection(Transform transform, Vector3 positionToLook, float timeToRotate)
         {

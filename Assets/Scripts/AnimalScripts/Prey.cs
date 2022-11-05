@@ -18,15 +18,13 @@ namespace EcosystemSimulation
 
         private bool isRunningAway;
 
-        void Awake()
+        void Start()
         {
              eaters = new List<Animal>();
         }
 
         protected override Priority GetPriority()
-        {
-            //Collider[] predatorColliders = fov.GetNearbyColliders(animalObject.transform.position, lineOfSightRadius, fov.PredatorLayerMask);
-            
+        {          
             if(PredatorColliders.Length != 0)
             {
                 if (!isRunningAway && currentAction != null)
@@ -36,10 +34,6 @@ namespace EcosystemSimulation
                 }
                 return Priority.RunAway;
             }
-            //else if(currentPriority != Priority.None)
-            //{
-            //    return currentPriority;
-            //}
             else
             {
                 if (isRunningAway)
@@ -47,7 +41,6 @@ namespace EcosystemSimulation
 
                 if (ReproductionUrge > 70 && Nourishment > 50 && Hydration > 50 && genderHandler.IsAvailableForMating())
                 {
-                    Debug.Log("NORO YRA");
                     return Priority.Reproduce;
                 }
 
@@ -69,7 +62,6 @@ namespace EcosystemSimulation
                     {
                         Collider collider = FindNearestCollider(PlantColliders);
                         Vector3 destination =  collider.gameObject.transform.position;
-                        Debug.Log($"{collider} {collider.gameObject.name} {destination}");
                         return new EatingAction(this, collider.GetComponent<IEatable>(), collider.gameObject);
                     }
                     else
@@ -103,7 +95,7 @@ namespace EcosystemSimulation
                         return new WaitingAction(this, 2);
                     }
                 default:
-                    return new SearchAction(this, () => PlantColliders, GetSearchDestination()); ;
+                    return new MoveToAction(this, GetSearchDestination());
 
             }
         }
@@ -121,37 +113,10 @@ namespace EcosystemSimulation
             {
                 if (animal.currentAction != null && animal != null) //since the animal could be eaten or have his action cancelled on the same frame, need to check)
                 {
-                    Debug.Log($"Animal {animal.gameObject.name} cancelled rip");
                     animal.currentAction.Cancel();
                 }
             }
         }
-
-        //public void Init(GameObject animalObject, float baseHunger, float baseThirst, float baseSpeed, float baseSightRadius, int baseNutritionalValue, float growthProgress, GenderHandler gender)
-        //{
-        //    currentPriority = Priority.None;
-        //    currentAction = null;
-
-        //    eaters = new List<Animal>();
-        //    this.animalObject = animalObject;
-        //    fov = new FieldOfView();
-
-        //    nourishment = baseHunger;
-        //    hydration = baseThirst;
-        //    movementSpeed = baseSpeed;
-        //    lineOfSightRadius = baseSightRadius;
-        //    currentDestination = animalObject.transform.position;
-        //    nutritionalValue = baseNutritionalValue;
-        //    size = gameObject.transform.lossyScale;
-        //    GrowthProgress = growthProgress;
-
-        //    this.genderHandler = gender;
-        //    //Collider[] colliders = fov.GetNearbyColliders(animalObject.transform.position, 3);
-        //    //foreach(Collider collider in colliders)
-        //    //{
-        //    //    Debug.Log(collider.gameObject);
-        //    //}
-        //}
     }
 }
 
