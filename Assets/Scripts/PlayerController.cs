@@ -33,7 +33,11 @@ namespace EcosystemSimulation
 
         private bool isMovementPaused = true;
 
-        // Update is called once per frame
+        void Start()
+        {
+
+        }
+
         void Update()
         {
             if(Input.GetKeyDown(KeyCode.Escape))

@@ -10,8 +10,6 @@ namespace EcosystemSimulation
     public class UIHandler : MonoBehaviour
     {
         [SerializeField]
-        SimulationController simulationController;
-        [SerializeField]
         TerrainGeneration terrainGenerator;
 
         [SerializeField]
