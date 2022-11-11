@@ -146,6 +146,9 @@ namespace EcosystemSimulation
 
         private void SetupWaterCollider(int width, int length)
         {
+            width--;
+            length--;
+
             waterColliderObject = new GameObject("Water Collider");
             for (int y = 0; y < length; y++)
             {
