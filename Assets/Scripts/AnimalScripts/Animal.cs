@@ -34,8 +34,8 @@ namespace EcosystemSimulation
         [SerializeField]
         protected float reproductionUrge;
 
-        private const float hungerTick = 0.01f;
-        private const float thirstTick = 0.01f;
+        private const float hungerTick = 0.005f;
+        private const float thirstTick = 0.005f;
         private const float growthTick = 0.001f;
 
         public float GrowthProgress { get; set; }
@@ -92,14 +92,18 @@ namespace EcosystemSimulation
                 currentAction = GetNextAction();
                 currentDestination = currentAction.ActionDestination;
 
-                navAgent.SetDestination(currentDestination);
+                SetPath();
             }
 
             if (currentDestination.IsFar(currentAction.ActionDestination, 0.1f))
-            {
+            {             
                 currentDestination = currentAction.ActionDestination;
-                navAgent.SetDestination(currentDestination);
+
+                SetPath();
             }
+
+            //if (navAgent.pathPending)
+            //    //Debug.Log($"{gameObject.name} pathas pendingas");
 
             if (currentAction.AreConditionsMet())
             {
@@ -176,6 +180,27 @@ namespace EcosystemSimulation
             Health = 100;
         }
 
+        private void SetPath()
+        {
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(currentDestination, out hit, 2f, NavMesh.AllAreas))
+            {
+                NavMeshPath path = new NavMeshPath();
+                if (!navAgent.CalculatePath(hit.position, path))
+                {
+                    //Debug.Log($"{gameObject.name} pathas nerastas :(");
+                }
+                navAgent.SetPath(path);
+            }
+            else
+            {
+                //Debug.Log("not found point");
+            }
+            //navAgent.SetDestination(currentDestination);
+
+            //Debug.Log($"{gameObject.name} pathas updatingas");
+        }
+
         public Collider FindNearestCollider(Collider[] colliders)
         {
             Collider nearestCollider = colliders[0];
@@ -212,7 +237,7 @@ namespace EcosystemSimulation
                 searchDestination = (searchDirection * animalStats.LineOfSightRadius) + position;
                 if (IsInaccessible(searchDestination))
                 {
-                    Debug.Log("changed path" + searchDestination);
+                    //Debug.Log("changed path" + searchDestination);
                     searchDirection = -searchDirection;                    
                 }
 
@@ -244,7 +269,7 @@ namespace EcosystemSimulation
                 runningDestination = (searchDirection.RotateByAngle(randomAngle) * animalStats.LineOfSightRadius) + position;
 
                 loopIteration++;
-                if (loopIteration == 15)
+                if (loopIteration == 31)
                 {
                     loopIteration = 0;
                     if (nDirection % 2 == 0)
@@ -256,7 +281,7 @@ namespace EcosystemSimulation
                     nDirection++;
                 }
 
-            } while (IsInaccessible(runningDestination) && loopIteration < 16 && nDirection < 3);
+            } while (IsInaccessible(runningDestination) && loopIteration < 32 && nDirection < 3);
             
             return runningDestination;
         }

@@ -39,8 +39,6 @@ namespace EcosystemSimulation
 
             if(Time.frameCount % 120 == 0)
             {
-                Debug.Log("Frame vibe check passed");
-
                 if (GrowthProgress == 1 && Random.value > 0.98f)
                 {
                     DisperseSeeds();
@@ -56,7 +54,7 @@ namespace EcosystemSimulation
             {
                 if (animal.currentAction != null && animal != null) //since the animal could be eaten or have his action cancelled on the same frame, need to check)
                 {
-                    Debug.Log($"Animal {animal.gameObject.name} cancelled rip");
+                    //Debug.Log($"Animal {animal.gameObject.name} cancelled rip");
                     animal.currentAction.Cancel();
                 }
             }

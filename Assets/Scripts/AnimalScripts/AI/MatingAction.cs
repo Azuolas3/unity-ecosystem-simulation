@@ -13,7 +13,7 @@ namespace EcosystemSimulation
         {
             performer = actionPerformer;
             this.matingPartner = matingPartner;
-            Debug.Log("hot time " + performer.name + " " + matingPartner.name + " " + matingPartner.currentAction);
+            //Debug.Log("hot time " + performer.name + " " + matingPartner.name + " " + matingPartner.currentAction);
         }
 
         public override void Execute()

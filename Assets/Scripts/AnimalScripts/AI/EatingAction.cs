@@ -16,8 +16,8 @@ namespace EcosystemSimulation
             this.performer = actionPerformer;
             this.food = food;
             this.foodObject = foodObject;
-            Debug.Log(actionPerformer.name + food.Eaters + food);
-            Debug.Log(performer);
+            //Debug.Log(actionPerformer.name + food.Eaters + food);
+            //Debug.Log(performer);
             food.Eaters.Add(performer);
         }
 

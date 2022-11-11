@@ -10,10 +10,13 @@ mimics the fundamentals of real ecosystems (relation between prey and predator p
 ## How can I play and check this out?
 There's a download link here -> <add link later>
 
+## How to setup this project?
+Just clone it and you should be good to go (might need to import TextMeshPro)
+
 ## What are the current main issues?
 1. NavAgent movement is very unnatural and rough when there are many NavAgents in the simulation due to them taking a long time to calculate their path. 
 	Possible solutions include either starting calculating their next path while they're still moving or creating my own pathfinding system.
-2. The ecosystem better at balancing/self-balancing - It's decent as it is right now, however there's a lot of room for improvement. 
+2. The ecosystem should be better at balancing/self-balancing - It's decent as it is right now, however there's a lot of room for improvement. 
 
 
 

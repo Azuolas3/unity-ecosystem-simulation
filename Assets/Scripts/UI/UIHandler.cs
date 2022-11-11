@@ -29,15 +29,25 @@ namespace EcosystemSimulation
         [SerializeField]
         TMP_InputField treeInputField;
 
-        int seed;
-        int mapWidth;
-        int mapLength;
+        const int INITIAL_SEED = 0;
+        const int INITIAL_MAP_WIDTH = 60;
+        const int INITIAL_MAP_LENGTH = 60;
 
-        float preyDensity;
-        float predatorDensity;
+        const float INITIAL_PREY_DENSITY = 0.03f;
+        const float INITIAL_PREDATOR_DENSITY = 0.003f;
 
-        float plantDensity;
-        float treeDensity;
+        const float INITIAL_PLANT_DENSITY = 0.15f;
+        const float INITIAL_TREE_DENSITY = 0.2f;
+
+        int seed = INITIAL_SEED;
+        int mapWidth = INITIAL_MAP_WIDTH;
+        int mapLength = INITIAL_MAP_LENGTH;
+
+        float preyDensity = INITIAL_PREY_DENSITY;
+        float predatorDensity = INITIAL_PREDATOR_DENSITY;
+
+        float plantDensity = INITIAL_PLANT_DENSITY;
+        float treeDensity = INITIAL_TREE_DENSITY;
 
 
         void Start()
@@ -99,7 +109,15 @@ namespace EcosystemSimulation
 
         void GenerateInitialSimulation()
         {
-            MapSettings mapSettings = new MapSettings(0, 60, 60, 0.03f, 0.003f, 0.15f, 0.2f);
+            seedInputField.text = seed.ToString();
+            widthInputField.text = mapWidth.ToString();
+            lengthInputField.text = mapLength.ToString();
+            preyInputField.text = (preyDensity * 100).ToString();
+            predatorInputField.text = (predatorDensity * 100).ToString();
+            plantInputField.text = (plantDensity * 100).ToString();
+            treeInputField.text = (treeDensity * 100).ToString();
+
+            MapSettings mapSettings = new MapSettings(seed, mapWidth, mapLength, preyDensity, predatorDensity, plantDensity, treeDensity);
             terrainGenerator.GenerateTerrain(mapSettings);
         }
     }

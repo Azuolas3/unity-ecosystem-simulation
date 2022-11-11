@@ -32,7 +32,7 @@ namespace EcosystemSimulation
 
         public override void HandleMating(Genes fatherGenes)
         {
-            Debug.Log($"{baseAnimal.gameObject.name} {baseAnimal.currentAction}");
+            //Debug.Log($"{baseAnimal.gameObject.name} {baseAnimal.currentAction}");
             if(baseAnimal.currentAction != null)
                 baseAnimal.currentAction.Cancel();
             baseAnimal.currentPriority = Animal.Priority.None;

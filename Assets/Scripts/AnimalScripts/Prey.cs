@@ -95,7 +95,7 @@ namespace EcosystemSimulation
                         return new WaitingAction(this, 2);
                     }
                 default:
-                    return new MoveToAction(this, GetSearchDestination());
+                    return new MoveToAction(this, GetSearchDestination()); // move to random direction if there's no goal
 
             }
         }
