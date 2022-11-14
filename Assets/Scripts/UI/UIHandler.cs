@@ -13,6 +13,9 @@ namespace EcosystemSimulation
         TerrainGenerator terrainGenerator;
 
         [SerializeField]
+        Slider timeSpeedSlider;
+
+        [SerializeField]
         Button button;
         [SerializeField]
         TMP_InputField seedInputField;
@@ -104,7 +107,22 @@ namespace EcosystemSimulation
             plantInputField.onEndEdit.AddListener((string value) => plantDensity = ParsePercentageInput(value));
             treeInputField.onEndEdit.AddListener((string value) => treeDensity = ParsePercentageInput(value));
 
+            timeSpeedSlider.onValueChanged.AddListener(SliderListener);
+
             button.onClick.AddListener(OnClickGenerate);
+        }
+
+        void SliderListener(float value)
+        {
+            if (value == -1)
+            {
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                Time.timeScale = Mathf.Pow(2, value);
+            }
+
         }
 
         void GenerateInitialSimulation()

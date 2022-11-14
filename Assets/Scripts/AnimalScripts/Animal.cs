@@ -16,7 +16,17 @@ namespace EcosystemSimulation
         }
 
         public Priority currentPriority;
-        public Vector3 currentDestination;
+
+        [SerializeField]
+        private Vector3 currentDestination;
+        public Vector3 CurrentDestination 
+        { 
+            get 
+            {
+                currentDestination = currentAction.ActionDestination;
+                return currentDestination; 
+            } 
+        }
         public Action currentAction;
 
         public GameObject animalObject;
@@ -34,8 +44,8 @@ namespace EcosystemSimulation
         [SerializeField]
         protected float reproductionUrge;
 
-        private const float hungerTick = 0.005f;
-        private const float thirstTick = 0.005f;
+        private const float hungerTick = 0.01f;
+        private const float thirstTick = 0.01f;
         private const float growthTick = 0.001f;
 
         public float GrowthProgress { get; set; }
@@ -43,9 +53,6 @@ namespace EcosystemSimulation
         public bool IsGrownUp { get { return GrowthProgress == 1; } }
 
         public GenderHandler genderHandler;
-
-        [SerializeField]
-        AnimalGender gendertest;
 
         public float Health
         {
@@ -72,7 +79,7 @@ namespace EcosystemSimulation
         }
 
 
-        protected bool NeedsDestination { get { return animalObject.transform.position == currentDestination; } }
+        protected bool NeedsDestination { get { return animalObject.transform.position == CurrentDestination; } }
         protected bool NeedsAction { get { return currentAction == null; } }
 
         [SerializeField]
@@ -83,23 +90,21 @@ namespace EcosystemSimulation
         public Collider[] PlantColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, animalStats.LineOfSightRadius, fov.PlantLayerMask); } }
         public Collider[] PreyColliders { get { return fov.GetNearbyColliders(animalObject.transform.position, animalStats.LineOfSightRadius, fov.PreyLayerMask); } }
 
-        public void Update()
+        protected virtual void Update()
         {       
             currentPriority = GetPriority();
 
             if (NeedsAction)
             {
                 currentAction = GetNextAction();
-                currentDestination = currentAction.ActionDestination;
-
                 SetPath();
+                Debug.Log($"{name} {currentDestination} {currentAction}");
             }
 
-            if (currentDestination.IsFar(currentAction.ActionDestination, 0.1f))
+            if (CurrentDestination.IsFar(navAgent.destination, 0.1f))
             {             
-                currentDestination = currentAction.ActionDestination;
-
                 SetPath();
+                //Debug.Log($"{name} {currentDestination} {currentAction.ActionDestination}");
             }
 
             //if (navAgent.pathPending)
@@ -110,14 +115,14 @@ namespace EcosystemSimulation
                 currentAction.Execute();
             }
 
-            Nourishment = Mathf.Clamp(Nourishment - hungerTick, 0, 100);
-            Hydration = Mathf.Clamp(Hydration - thirstTick, 0, 100);
+            Nourishment = Mathf.Clamp(Nourishment - hungerTick * Time.timeScale, 0, 100);
+            Hydration = Mathf.Clamp(Hydration - thirstTick * Time.timeScale, 0, 100);
 
             reproductionUrge = ReproductionUrge;
 
             if (GrowthProgress != 1)
             {
-                GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick);
+                GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick * Time.timeScale);
                 
                 gameObject.transform.localScale = new Vector3(animalStats.Size, animalStats.Size, animalStats.Size) * GrowthProgress;
                 navAgent.speed = (animalStats.MovementSpeed / animalStats.Size) * GrowthProgress;
@@ -147,7 +152,7 @@ namespace EcosystemSimulation
             nourishment = baseHunger;
             hydration = baseThirst;
             animalStats = new AnimalStats(gameObject.transform.lossyScale.x, baseSpeed, baseSightRadius, colour); // can take any value of scale
-            currentDestination = animalObject.transform.position;
+            //CurrentDestination = animalObject.transform.position;
             animalStats.Size = gameObject.transform.lossyScale.x;      
             GrowthProgress = growthProgress;
             navAgent.speed = GrowthProgress * (animalStats.MovementSpeed / animalStats.Size);
@@ -171,7 +176,7 @@ namespace EcosystemSimulation
             nourishment = baseHunger;
             hydration = baseThirst;
             animalStats = stats;
-            currentDestination = animalObject.transform.position;
+            //CurrentDestination = animalObject.transform.position;
             animalStats.Size = gameObject.transform.lossyScale.x;
             GrowthProgress = growthProgress;
             navAgent.speed = GrowthProgress * animalStats.MovementSpeed;
@@ -183,18 +188,18 @@ namespace EcosystemSimulation
         private void SetPath()
         {
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(currentDestination, out hit, 2f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(CurrentDestination, out hit, 2f, NavMesh.AllAreas))
             {
                 NavMeshPath path = new NavMeshPath();
                 if (!navAgent.CalculatePath(hit.position, path))
                 {
-                    //Debug.Log($"{gameObject.name} pathas nerastas :(");
+                    Debug.Log($"{gameObject.name} pathas nerastas :(");
                 }
                 navAgent.SetPath(path);
             }
             else
             {
-                //Debug.Log("not found point");
+                Debug.Log($"{gameObject.name} pointas nerastas :(");
             }
             //navAgent.SetDestination(currentDestination);
 

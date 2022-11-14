@@ -27,7 +27,7 @@ namespace EcosystemSimulation
                             matingAnimal.currentAction.Cancel();
 
                         matingAnimal.genderHandler.hasMate = true;
-                        matingAnimal.currentDestination = matingAnimal.gameObject.Position();
+                        //matingAnimal.CurrentDestination = matingAnimal.gameObject.Position();
                         matingAnimal.currentAction = null;
                         Transform partnerTransform = matingAnimal.gameObject.transform;
                         // make partner rotate towards this animal to make it look better

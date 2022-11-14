@@ -25,6 +25,7 @@ namespace EcosystemSimulation
 
         public override void Cancel()
         {
+            matingPartner.genderHandler.hasMate = false;
             performer.currentPriority = Animal.Priority.None;
             performer.currentAction = null;
         }

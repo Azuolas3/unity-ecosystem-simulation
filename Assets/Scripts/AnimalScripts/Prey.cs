@@ -23,22 +23,31 @@ namespace EcosystemSimulation
              eaters = new List<Animal>();
         }
 
-        protected override Priority GetPriority()
-        {          
-            if(PredatorColliders.Length != 0)
+        protected override void Update()
+        {
+            base.Update();
+            if (PredatorColliders.Length != 0)
             {
                 if (!isRunningAway && currentAction != null)
                 {
                     currentAction.Cancel();
                     isRunningAway = true;
                 }
+            }
+            else if (isRunningAway)
+            {
+                isRunningAway = false;
+            }
+        }
+
+        protected override Priority GetPriority()
+        {          
+            if(PredatorColliders.Length != 0)
+            {
                 return Priority.RunAway;
             }
             else
             {
-                if (isRunningAway)
-                    isRunningAway = false;
-
                 if (ReproductionUrge > 70 && Nourishment > 50 && Hydration > 50 && genderHandler.IsAvailableForMating())
                 {
                     return Priority.Reproduce;

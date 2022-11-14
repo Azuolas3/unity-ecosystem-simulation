@@ -32,7 +32,7 @@ namespace EcosystemSimulation
         {
             if(GrowthProgress != 1)
             {
-                GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick);
+                GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick * Time.timeScale);
                 gameObject.transform.localScale = new Vector3(size, size, size) * GrowthProgress;
             }
         

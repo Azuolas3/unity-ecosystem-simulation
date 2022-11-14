@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EcosystemSimulation
 {
-    // Class which handles anything that relates with an animals gender - it's gender, how it reproduces, etc.
+    // Class which holds and handles anything that relates with an animals gender - it's gender, how it reproduces, etc.
     public abstract class GenderHandler
     {
         protected Animal baseAnimal;

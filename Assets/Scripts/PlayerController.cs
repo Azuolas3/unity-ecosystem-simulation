@@ -25,7 +25,7 @@ namespace EcosystemSimulation
         //TMP_Text textField;
 
         private const float mouseSensitivity = 5f;
-        private const float movementSpeed = 15f;
+        private const float movementSpeed = 25f;
 
 
         private float xRotation = 0f;
@@ -83,7 +83,7 @@ namespace EcosystemSimulation
                 currentSpeed *= 2;
 
             Vector3 movement = transform.right * moveX + transform.forward * moveZ + Vector3.up * moveY; //using global up instead of local
-            characterController.Move(movement * currentSpeed * Time.deltaTime);
+            characterController.Move(movement * currentSpeed * Time.unscaledDeltaTime); //using unscaledDeltaTime since player can speed up simulation
         }
 
         void SelectWithMouse()
