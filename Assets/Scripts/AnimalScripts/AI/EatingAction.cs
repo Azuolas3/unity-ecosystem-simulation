@@ -22,10 +22,10 @@ namespace EcosystemSimulation
         }
 
         public override void Execute()
-        {
-            float result = performer.Nourishment + food.NutritionalValue;
-            performer.Nourishment = Mathf.Min(100, result);            
-            food.Consume();
+        {        
+            food.Consume(performer);
+            performer.currentAction = null;
+            performer.currentPriority = Animal.Priority.None;
         }
 
         public override void Cancel()

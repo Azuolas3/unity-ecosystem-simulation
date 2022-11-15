@@ -109,8 +109,11 @@ namespace EcosystemSimulation
             }
         }
 
-        public void Consume()
+        public void Consume(Animal eater)
         {
+            float result = eater.Nourishment + NutritionalValue;
+            eater.Nourishment = Mathf.Min(100, result);
+
             OnDeath();
         }
 

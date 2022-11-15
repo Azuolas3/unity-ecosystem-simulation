@@ -27,12 +27,14 @@ namespace EcosystemSimulation
         private int width;
         private int length;
 
-        private GameObject instantiatedFauna;
+        public GameObject instantiatedPredators;
+        public GameObject instantiatedPrey;
+
         private bool[,] occupiedTilesMap;
 
         public void GeneratePreyFauna()
         {
-            instantiatedFauna = new GameObject("Instantiated fauna");
+            instantiatedPrey = new GameObject("Instantiated prey");
             System.Random pseudoRNG = new System.Random(seed);
 
             for (int y = 0; y < length - 1; y++)
@@ -47,7 +49,7 @@ namespace EcosystemSimulation
                             int chosenAnimalIndex = pseudoRNG.Next(0, preyPrefabs.Length);
                             GameObject obj = Instantiate(preyPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
                             Prey prey = obj.GetComponent<Prey>();
-                            obj.transform.SetParent(instantiatedFauna.transform);
+                            obj.transform.SetParent(instantiatedPrey.transform);
 
                             GenderHandler gender = preyCount % 2 == 0 ? new MaleHandler(prey) : new FemaleHandler(prey, 10);
                             prey.Init(obj, 50, 25, 3, 5, 1, gender, GetRandomColor(preyColors));
@@ -64,6 +66,7 @@ namespace EcosystemSimulation
         public void GeneratePredatorFauna()
         {
             System.Random pseudoRNG = new System.Random(seed);
+            instantiatedPredators = new GameObject("Instantiated predators");
 
             for (int y = 0; y < length - 1; y++)
             {
@@ -77,7 +80,7 @@ namespace EcosystemSimulation
                             int chosenAnimalIndex = pseudoRNG.Next(0, predatorPrefabs.Length);
                             GameObject obj = Instantiate(predatorPrefabs[chosenAnimalIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
                             Animal animal = obj.GetComponent<Animal>();
-                            obj.transform.SetParent(instantiatedFauna.transform);
+                            obj.transform.SetParent(instantiatedPredators.transform);
 
                             GenderHandler gender = predatorCount % 2 == 0 ? new MaleHandler(animal) : new FemaleHandler(animal, 10);
                             animal.Init(obj, 50, 25, 3.5f, 5, 1, gender, GetRandomColor(preyColors));
@@ -93,7 +96,9 @@ namespace EcosystemSimulation
 
         public void ClearGeneratedFauna()
         {
-            Destroy(instantiatedFauna);
+            Destroy(instantiatedPrey);
+            Destroy(instantiatedPredators);
+
             preyCount = 0;
         }
 

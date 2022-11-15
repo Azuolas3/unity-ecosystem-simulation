@@ -21,14 +21,16 @@ namespace EcosystemSimulation
         private int width;
         private int length;
 
-        private GameObject instantiatedFlora;
+        public GameObject instantiatedTrees;
+        public GameObject instantiatedPlants;
+
         private bool[,] occupiedTilesMap;
 
         private int floraCount;
 
         public void GenerateTrees()
         {
-            instantiatedFlora = new GameObject("Instantiated Flora");
+            instantiatedTrees = new GameObject("Instantiated Trees");
             System.Random pseudoRNG = new System.Random(seed);
 
             for (int y = 0; y < length - 1; y++)
@@ -42,7 +44,7 @@ namespace EcosystemSimulation
                         {
                             int chosenTreeIndex = pseudoRNG.Next(0, treePrefabs.Length);
                             GameObject obj = Instantiate(treePrefabs[chosenTreeIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
-                            obj.transform.SetParent(instantiatedFlora.transform);
+                            obj.transform.SetParent(instantiatedTrees.transform);
 
                             occupiedTilesMap[x, y] = true;
                         }
@@ -53,6 +55,7 @@ namespace EcosystemSimulation
 
         public void GeneratePlants()
         {
+            instantiatedPlants = new GameObject("Instantiated Plants");
             System.Random pseudoRNG = new System.Random(seed);
 
             for (int y = 0; y < length - 1; y++)
@@ -66,7 +69,7 @@ namespace EcosystemSimulation
                         {
                             int chosenPlantIndex = pseudoRNG.Next(0, plantPrefabs.Length);
                             GameObject obj = Instantiate(plantPrefabs[chosenPlantIndex], new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity);
-                            obj.transform.SetParent(instantiatedFlora.transform);
+                            obj.transform.SetParent(instantiatedPlants.transform);
                             obj.GetComponent<Plant>().Init(30, 1f);
                             obj.name = "Plant " + floraCount;
                             floraCount++;
@@ -78,7 +81,8 @@ namespace EcosystemSimulation
 
         public void ClearGeneratedFlora()
         {
-            Destroy(instantiatedFlora);
+            Destroy(instantiatedTrees);
+            Destroy(instantiatedPlants);
         }
 
         public void Init(int seed, int width, int length, float plantDensity, float treeDensity, TerrainName[,] terrainMap, bool[,] occupiedTilesMap)

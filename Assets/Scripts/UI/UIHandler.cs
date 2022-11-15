@@ -32,6 +32,17 @@ namespace EcosystemSimulation
         [SerializeField]
         TMP_InputField treeInputField;
 
+        [SerializeField]
+        TMP_Text predatorCountText;
+        [SerializeField]
+        TMP_Text preyCountText;
+        [SerializeField]
+        TMP_Text plantCountText;
+
+        private int PreyCount { get { return terrainGenerator.faunaGenerator.instantiatedPrey.transform.childCount; } }
+        private int PredatorCount { get { return terrainGenerator.faunaGenerator.instantiatedPredators.transform.childCount; } }
+        private int PlantCount { get { return terrainGenerator.floraGenerator.instantiatedPlants.transform.childCount; } }
+
         const int INITIAL_SEED = 0;
         const int INITIAL_MAP_WIDTH = 60;
         const int INITIAL_MAP_LENGTH = 60;
@@ -57,6 +68,13 @@ namespace EcosystemSimulation
         {
             SetupInputListeners();
             GenerateInitialSimulation();
+        }
+
+        void Update()
+        {
+            preyCountText.text = $"Prey: {PreyCount}";
+            predatorCountText.text = $"Predators: {PredatorCount}";
+            plantCountText.text = $"Plants: {PlantCount}";
         }
 
         void OnClickGenerate()

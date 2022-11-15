@@ -12,6 +12,8 @@ namespace EcosystemSimulation
         public float GrowthProgress { get; set; }
         private const float growthTick = 0.001f;
 
+        private bool isDamaged; // if an animal started eating the plant, but didn't finish, it becomes damaged.
+
         private float size;
         public List<Animal> Eaters
         {
@@ -30,14 +32,14 @@ namespace EcosystemSimulation
 
         public void Update()
         {
-            if(GrowthProgress != 1)
+            if(!isDamaged && GrowthProgress != 1)
             {
-                GrowthProgress = Mathf.Clamp01(GrowthProgress += growthTick * Time.timeScale);
+                GrowthProgress = Mathf.Clamp01(GrowthProgress += (growthTick * Time.timeScale));
                 gameObject.transform.localScale = new Vector3(size, size, size) * GrowthProgress;
             }
         
 
-            if(Time.frameCount % 120 == 0)
+            if(!isDamaged && Time.frameCount % 120 == 0)
             {
                 if (GrowthProgress == 1 && Random.value > 0.98f)
                 {
@@ -46,7 +48,32 @@ namespace EcosystemSimulation
             }
         }
 
-        public void Consume() // Contrary to name, this function is more like GetConsumed().
+        public void Consume(Animal eater) // Contrary to name, this function is more like GetConsumed().
+        {
+            float result = eater.Nourishment + NutritionalValue;
+            eater.Nourishment = Mathf.Min(100, result);
+
+            if(result <= 100)
+            {
+                OnDeath();
+            }
+            else // logic if the plant wasn't completely eaten
+            {
+                isDamaged = true;
+
+                float remainder = result - 100;
+                GrowthProgress = remainder / nutritionalValue;
+
+                if(GrowthProgress <= 0.1f) // destroying
+                {
+                    OnDeath();
+                    return;
+                }
+                gameObject.transform.localScale = new Vector3(size, size, size) * GrowthProgress;
+            }
+        }
+
+        private void OnDeath()
         {
             Destroy(gameObject);
             gameObject.GetComponent<Collider>().enabled = false; // disabling it manually after destroying since destroy is delayed until end of update(), which means another animal can queue action to eat it aswell.
