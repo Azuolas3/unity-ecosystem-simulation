@@ -8,4 +8,8 @@ it's still pretty fun to follow each individual animal and watch how even this b
 mimics the fundamentals of real ecosystems (relation between prey and predator populations, etc.)
 
 ## How to setup this project?
-Just clone it and launch from unity!
+1. Clone the project
+2. Open the project from Unity.
+3. Load the sample scene from "Scenes" folder
+4. If prompted to import TMP (Text Mesh Pro) essentials, make sure to do that
+5. You're good to go!
